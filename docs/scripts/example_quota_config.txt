@@ -1,0 +1,10 @@
+# Example file for bulk quota setting
+# Format: email:limit
+# One pair per line
+# Lines starting with # are comments and will be ignored
+
+user1@example.com:100
+user2@example.com:200
+user3@example.com:50
+admin@company.com:500
+test@demo.org:25 

@@ -1,0 +1,9 @@
+# Example file for bulk quota reset
+# One email per line
+# Lines starting with # are comments and will be ignored
+
+user1@example.com
+user2@example.com
+user3@example.com
+admin@company.com
+test@demo.org 

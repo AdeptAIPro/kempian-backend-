@@ -1,0 +1,1103 @@
+# enhanced_recruitment_search.py - COMPLETE FIXED VERSION WITH ADVANCED MATCHING
+
+import os
+import faiss
+import numpy as np
+import pickle
+import logging
+import time
+import re
+import math
+import json
+import hashlib
+from collections import Counter, defaultdict
+from typing import List, Dict, Any, Optional, Tuple
+
+import boto3
+from sentence_transformers import SentenceTransformer, CrossEncoder
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, RegexpTokenizer
+import nltk
+
+# Import our enhanced matching system
+from enhanced_candidate_matcher import EnhancedCandidateMatchingSystem, MatchScore
+
+# Ensure NLTK resources are available
+try:
+    nltk.data.find('corpora/stopwords')
+    nltk.data.find('tokenizers/punkt')
+except nltk.downloader.DownloadError:
+    nltk.download('stopwords', quiet=True)
+    nltk.download('punkt', quiet=True)
+
+logger = logging.getLogger(__name__)
+
+# Data Classes
+class CandidateProfile:
+    """Represents a standardized candidate profile."""
+    def __init__(self,
+                 email: str,
+                 full_name: str,
+                 phone: str,
+                 resume_text: str,
+                 skills: List[str],
+                 experience_years: int,
+                 education: str,
+                 certifications: List[str],
+                 previous_roles: List[str],
+                 industries: List[str],
+                 location: str,
+                 source_url: str,
+                 skill_proficiency: Dict[str, float],
+                 seniority_level: str
+                ):
+        self.email = email
+        self.full_name = full_name
+        self.phone = phone
+        self.resume_text = resume_text
+        self.skills = skills
+        self.experience_years = experience_years
+        self.education = education
+        self.certifications = certifications
+        self.previous_roles = previous_roles
+        self.industries = industries
+        self.location = location
+        self.source_url = source_url
+        self.skill_proficiency = skill_proficiency
+        self.seniority_level = seniority_level
+        self.combined_text = self._generate_combined_text()
+
+    def _safe_list_to_string(self, item, default: str = "") -> str:
+        """Safely convert any item to string, handling lists properly"""
+        if item is None:
+            return default
+        elif isinstance(item, list):
+            clean_items = [str(x) for x in item if x is not None]
+            return ', '.join(clean_items) if clean_items else default
+        elif isinstance(item, str):
+            return item
+        else:
+            return str(item)
+
+    def _generate_combined_text(self) -> str:
+        """Generates a comprehensive text representation of the candidate - FIXED VERSION"""
+        try:
+            # Safely convert all fields to strings
+            name = self._safe_list_to_string(self.full_name, "Unknown")
+            resume = self._safe_list_to_string(self.resume_text, "")
+            skills_str = self._safe_list_to_string(self.skills, "")
+            education_str = self._safe_list_to_string(self.education, "")
+            certifications_str = self._safe_list_to_string(self.certifications, "")
+            roles_str = self._safe_list_to_string(self.previous_roles, "")
+            industries_str = self._safe_list_to_string(self.industries, "")
+            location_str = self._safe_list_to_string(self.location, "")
+            seniority_str = self._safe_list_to_string(self.seniority_level, "")
+            
+            # Build text parts with safe string concatenation
+            text_parts = []
+            
+            if name:
+                text_parts.append(f"Name: {name}")
+            if resume:
+                text_parts.append(f"Resume: {resume}")
+            if skills_str:
+                text_parts.append(f"Skills: {skills_str}")
+            if self.experience_years and self.experience_years > 0:
+                text_parts.append(f"Experience: {self.experience_years} years")
+            if education_str:
+                text_parts.append(f"Education: {education_str}")
+            if certifications_str:
+                text_parts.append(f"Certifications: {certifications_str}")
+            if roles_str:
+                text_parts.append(f"Previous Roles: {roles_str}")
+            if industries_str:
+                text_parts.append(f"Industries: {industries_str}")
+            if location_str:
+                text_parts.append(f"Location: {location_str}")
+            if seniority_str:
+                text_parts.append(f"Seniority: {seniority_str}")
+            
+            # Join with periods and ensure we have valid text
+            combined = ". ".join(text_parts)
+            
+            # Fallback if somehow we get empty text
+            if not combined.strip():
+                combined = f"Candidate with {self.experience_years} years experience"
+            
+            return combined
+            
+        except Exception as e:
+            logger.error(f"Error generating combined text for {self.email}: {e}")
+            return f"Candidate: {self.email}, Experience: {self.experience_years} years, Skills: {len(self.skills) if isinstance(self.skills, list) else 0}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert profile to a dictionary for storage/JSON output."""
+        return {
+            "email": self.email,
+            "full_name": self.full_name,
+            "phone": self.phone,
+            "resume_text": self.resume_text,
+            "skills": self.skills,
+            "experience_years": self.experience_years,
+            "education": self.education,
+            "certifications": self.certifications,
+            "previous_roles": self.previous_roles,
+            "industries": self.industries,
+            "location": self.location,
+            "source_url": self.source_url,
+            "skill_proficiency": self.skill_proficiency,
+            "seniority_level": self.seniority_level,
+            "combined_text": self.combined_text
+        }
+
+class SkillExtractor:
+    """Extracts skills and their proficiency from text."""
+    def __init__(self):
+        self.known_skills = {
+            "python": ["django", "flask", "numpy", "pandas", "scikit-learn", "tensorflow", "pytorch"],
+            "java": ["spring", "hibernate", "maven", "gradle"],
+            "javascript": ["react", "angular", "vue", "node.js", "express.js"],
+            "aws": ["s3", "ec2", "lambda", "dynamodb"],
+            "sql": ["mysql", "postgresql", "oracle"],
+            "docker": [], "kubernetes": [], "git": [], "agile": [], "scrum": [],
+            "machine learning": [], "deep learning": [], "nlp": [], "data science": []
+        }
+        self.tokenizer = RegexpTokenizer(r'\w+')
+        try:
+            self.stop_words = set(stopwords.words('english'))
+        except:
+            self.stop_words = set()
+        logger.info("SkillExtractor initialized.")
+
+    def extract_skills_with_context(self, text: str) -> Dict[str, Dict[str, Any]]:
+        """Extracts skills and infers proficiency based on context."""
+        found_skills = {}
+        text_lower = text.lower()
+
+        for main_skill, sub_skills in self.known_skills.items():
+            pattern = r'\b' + re.escape(main_skill) + r'\b'
+            if re.search(pattern, text_lower):
+                proficiency = self._infer_proficiency(text_lower, main_skill)
+                found_skills[main_skill] = {"proficiency": proficiency, "mentions": text_lower.count(main_skill)}
+
+            for sub_skill in sub_skills:
+                sub_pattern = r'\b' + re.escape(sub_skill) + r'\b'
+                if re.search(sub_pattern, text_lower) and sub_skill not in found_skills:
+                    proficiency = self._infer_proficiency(text_lower, sub_skill)
+                    found_skills[sub_skill] = {"proficiency": proficiency, "mentions": text_lower.count(sub_skill)}
+        return found_skills
+
+    def _infer_proficiency(self, text: str, skill: str) -> float:
+        """Infer proficiency based on keywords like 'expert', 'proficient', 'experience'."""
+        score = 0.5  # Default to intermediate
+
+        # Keywords indicating higher proficiency
+        if re.search(r'\b(expert|master|advanced|lead|senior)\s*(' + re.escape(skill) + r'|developer|engineer)\b', text):
+            score = 0.9
+        elif re.search(r'\b(proficient|strong|deep knowledge|extensive experience)\s*in\s*(' + re.escape(skill) + r')\b', text):
+            score = 0.8
+        elif re.search(r'\b(\d+\s+years?\s+experience\s*in\s*|developed|implemented|architected)\s*(' + re.escape(skill) + r')\b', text):
+            score = max(score, 0.7)
+        elif re.search(r'\b(familiar with|basic knowledge|interested in)\s*(' + re.escape(skill) + r')\b', text):
+            score = 0.3
+
+        return score
+
+# Memory Optimized Embedding System
+class MemoryOptimizedEmbeddingSystem:
+    """Memory-optimized embedding system"""
+
+    def __init__(self):
+        self.models = {}
+        self.cross_encoders = {}
+        self.cache = {}
+        self.cache_hits = 0
+        self.cache_total = 0
+
+        self._initialize_models_safely()
+
+    def _initialize_models_safely(self):
+        """Initialize models with memory management and timeout handling"""
+        try:
+            logger.info("🧠 Loading embedding models with memory optimization...")
+            
+            # Set timeout for HuggingFace downloads
+            import os
+            os.environ['HF_HUB_DOWNLOAD_TIMEOUT'] = '120'  # 2 minutes timeout
+            os.environ['HF_HUB_OFFLINE'] = '0'  # Allow online downloads
+            
+            # Start with smaller, faster model with timeout handling
+            try:
+                self.models["general"] = SentenceTransformer('all-MiniLM-L6-v2')
+                logger.info("✅ Loaded lightweight general model")
+            except Exception as e:
+                logger.error(f"❌ Could not load general model: {e}")
+                logger.info("🔄 Falling back to basic keyword matching")
+                self.models_loaded = False
+                return
+
+            # Try to load better model if memory allows
+            try:
+                import psutil
+                memory = psutil.virtual_memory()
+                available_gb = memory.available / (1024**3)
+
+                if available_gb > 3:
+                    self.models["technical"] = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+                    logger.info("✅ Loaded enhanced technical model")
+                else:
+                    logger.info("⚠️ Limited memory, using lightweight model for technical tasks")
+                    self.models["technical"] = self.models["general"]
+
+            except Exception as e:
+                logger.warning(f"⚠️ Could not load enhanced model: {e}")
+                self.models["technical"] = self.models["general"]
+
+            # Cross-encoder (optional)
+            try:
+                if available_gb > 2:
+                    self.cross_encoders["rerank"] = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+                    logger.info("✅ Cross-encoder loaded")
+                else:
+                    logger.info("⚠️ Skipping cross-encoder due to memory constraints")
+                    self.cross_encoders["rerank"] = None
+            except Exception as e:
+                logger.warning(f"⚠️ Cross-encoder not available: {e}")
+                self.cross_encoders["rerank"] = None
+
+            self.models_loaded = True
+            logger.info("✅ Memory-optimized embedding system initialized")
+
+        except Exception as e:
+            logger.error(f"❌ Error initializing models: {e}")
+            logger.info("🔄 Falling back to basic keyword matching")
+            self.models_loaded = False
+
+    def encode(self, text: str, model_type: str = "general") -> np.ndarray:
+        """Encodes text using the specified model."""
+        if not self.models_loaded:
+            logger.warning("Models not loaded, returning fallback embedding")
+            # Return a simple fallback embedding
+            return np.zeros(384)  # Standard dimension for all-MiniLM-L6-v2
+        
+        if text in self.cache:
+            self.cache_hits += 1
+            self.cache_total += 1
+            return self.cache[text]
+
+        self.cache_total += 1
+        model = self.models.get(model_type, self.models["general"])
+        embedding = model.encode(text, convert_to_numpy=True)
+        
+        # Manage cache size
+        if len(self.cache) > 1000:
+            # Remove oldest entries
+            oldest_keys = list(self.cache.keys())[:100]
+            for key in oldest_keys:
+                del self.cache[key]
+        
+        self.cache[text] = embedding
+        return embedding
+
+    def rerank(self, query: str, texts: List[str]) -> List[float]:
+        """Reranks texts based on query using cross-encoder."""
+        if not self.cross_encoders.get("rerank"):
+            logger.warning("Reranking requested but cross-encoder is not available. Returning default scores.")
+            return [1.0 / (i + 1) for i in range(len(texts))]
+
+        pairs = [[query, text] for text in texts]
+        scores = self.cross_encoders["rerank"].predict(pairs).tolist()
+        return scores
+
+    def get_cache_hit_rate(self) -> float:
+        """Returns the cache hit rate."""
+        return (self.cache_hits / self.cache_total) * 100 if self.cache_total > 0 else 0.0
+
+# Enhanced Recruitment Search System
+class EnhancedRecruitmentSearchSystem:
+    """
+    An enhanced recruitment search system leveraging FAISS, semantic embeddings,
+    and advanced candidate profiling.
+    """
+    def __init__(self, index_path: str = "enhanced_search_index"):
+        self.index_path = index_path
+        self.embedding_service = MemoryOptimizedEmbeddingSystem()
+        self.skill_extractor = SkillExtractor()
+        self.enhanced_matcher = EnhancedCandidateMatchingSystem()  # NEW: Advanced matching system
+        self.index = None
+        self.candidates: Dict[str, CandidateProfile] = {}
+        self.candidate_embeddings: Optional[np.ndarray] = None
+        self.dimension = self.embedding_service.models["general"].get_sentence_embedding_dimension()
+        self._load_index()
+        self.total_searches = 0
+        self.total_search_time = 0
+        self.cache_hits = 0
+        self.latest_bias_assessment = None
+        logger.info(f"EnhancedRecruitmentSearchSystem initialized with advanced matching and dimension {self.dimension}.")
+
+    def _load_index(self):
+        """Load FAISS index and candidate data if they exist."""
+        faiss_path = f"{self.index_path}.faiss"
+        candidates_path = f"{self.index_path}_candidates.pkl"
+        embeddings_path = f"{self.index_path}_embeddings.npy"
+
+        if os.path.exists(faiss_path) and os.path.exists(candidates_path) and os.path.exists(embeddings_path):
+            try:
+                self.index = faiss.read_index(faiss_path)
+                with open(candidates_path, 'rb') as f:
+                    self.candidates = pickle.load(f)
+                self.candidate_embeddings = np.load(embeddings_path)
+                logger.info(f"✅ Loaded FAISS index from {faiss_path} with {self.index.ntotal} vectors.")
+                logger.info(f"✅ Loaded {len(self.candidates)} candidates and embeddings.")
+            except Exception as e:
+                logger.error(f"❌ Failed to load index components: {e}. Starting fresh.")
+                self.index = None
+                self.candidates = {}
+                self.candidate_embeddings = None
+        else:
+            logger.info("No existing FAISS index or data found. Will create new ones.")
+
+    def _save_index(self):
+        """Save FAISS index and candidate data - FIXED VERSION"""
+        try:
+            # Create directory properly
+            index_dir = os.path.dirname(self.index_path) if os.path.dirname(self.index_path) else "."
+            if index_dir != "." and not os.path.exists(index_dir):
+                os.makedirs(index_dir, exist_ok=True)
+                logger.info(f"Created directory: {index_dir}")
+
+            # Save FAISS index
+            faiss_path = f"{self.index_path}.faiss"
+            faiss.write_index(self.index, faiss_path)
+            logger.info(f"✅ FAISS index saved to {faiss_path}")
+
+            # Save candidate data
+            candidates_path = f"{self.index_path}_candidates.pkl"
+            with open(candidates_path, 'wb') as f:
+                pickle.dump(self.candidates, f)
+            logger.info(f"✅ Candidates saved to {candidates_path}")
+
+            # Save embeddings
+            embeddings_path = f"{self.index_path}_embeddings.npy"
+            np.save(embeddings_path, self.candidate_embeddings)
+            logger.info(f"✅ Embeddings saved to {embeddings_path}")
+
+            logger.info("💾 Index saved successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to save index: {e}")
+
+    def cleanup_candidate_data(self, raw_candidates: List[Dict]) -> List[Dict]:
+        """Clean up candidate data to prevent processing errors"""
+        cleaned_candidates = []
+        
+        for i, candidate in enumerate(raw_candidates):
+            try:
+                cleaned = {}
+                
+                # Clean each field
+                for key, value in candidate.items():
+                    if value is None:
+                        cleaned[key] = ""
+                    elif isinstance(value, list):
+                        # Convert list elements to strings
+                        cleaned[key] = [str(item) for item in value if item is not None]
+                    elif isinstance(value, dict):
+                        # Convert dict to string representation
+                        cleaned[key] = str(value)
+                    else:
+                        cleaned[key] = value
+                
+                cleaned_candidates.append(cleaned)
+                
+            except Exception as e:
+                logger.error(f"Error cleaning candidate data at index {i}: {e}")
+                continue
+        
+        logger.info(f"Cleaned {len(cleaned_candidates)} out of {len(raw_candidates)} candidates")
+        return cleaned_candidates
+
+    def _create_candidate_profile(self, raw_candidate: Dict) -> CandidateProfile:
+        """Create enhanced candidate profile from raw data - FIXED VERSION"""
+        
+        def safe_str_conversion(value, default: str = "") -> str:
+            """Safely convert any value to string"""
+            if value is None:
+                return default
+            elif isinstance(value, list):
+                clean_items = [str(x) for x in value if x is not None]
+                return ', '.join(clean_items) if clean_items else default
+            elif isinstance(value, str):
+                return value
+            else:
+                return str(value)
+        
+        def safe_list_conversion(value, default: List[str] = None) -> List[str]:
+            """Safely convert any value to list of strings"""
+            if default is None:
+                default = []
+            
+            if value is None:
+                return default
+            elif isinstance(value, list):
+                return [str(x) for x in value if x is not None]
+            elif isinstance(value, str):
+                if ',' in value:
+                    return [s.strip() for s in value.split(',') if s.strip()]
+                elif value.strip():
+                    return [value.strip()]
+                else:
+                    return default
+            else:
+                return [str(value)] if value else default
+        
+        try:
+            # Extract and safely convert resume text
+            resume_text = safe_str_conversion(
+                raw_candidate.get('resume_text') or raw_candidate.get('ResumeText', '')
+            )
+            
+            # Extract and safely convert skills
+            skills_raw = raw_candidate.get('skills') or raw_candidate.get('Skills', [])
+            skills = safe_list_conversion(skills_raw)
+            
+            # Extract detailed skills with context if we have resume text
+            skill_details = {}
+            skill_proficiency = {}
+            if resume_text:
+                try:
+                    skill_details = self.skill_extractor.extract_skills_with_context(resume_text)
+                    skill_proficiency = {skill: details["proficiency"] for skill, details in skill_details.items()}
+                except Exception as e:
+                    logger.warning(f"Skill extraction failed for candidate: {e}")
+            
+            # Safely convert experience
+            experience_raw = raw_candidate.get('total_experience_years') or raw_candidate.get('Experience', 0)
+            experience_years = self._safe_convert_experience(experience_raw)
+            
+            # Determine seniority
+            seniority = self._determine_seniority_from_text(resume_text, experience_years)
+            
+            # Extract other fields safely
+            education = safe_str_conversion(
+                raw_candidate.get('education') or raw_candidate.get('Education', '')
+            )
+            
+            certifications = safe_list_conversion(
+                raw_candidate.get('certifications') or raw_candidate.get('Certifications', [])
+            )
+            
+            # Extract industries and roles from resume text
+            industries = self._extract_industries(resume_text)
+            previous_roles = self._extract_roles(resume_text)
+            
+            # Handle email - ensure we have one
+            email = safe_str_conversion(raw_candidate.get('email') or raw_candidate.get('Email'))
+            if not email:
+                candidate_id_hash = hashlib.sha256(str(raw_candidate).encode()).hexdigest()[:8]
+                email = f"candidate_{candidate_id_hash}@unknown.com"
+            
+            # Handle other contact info
+            full_name = safe_str_conversion(
+                raw_candidate.get('full_name') or raw_candidate.get('FullName'), 
+                'Unknown Candidate'
+            )
+            
+            phone = safe_str_conversion(raw_candidate.get('phone', ''))
+            location = safe_str_conversion(
+                raw_candidate.get('location') or raw_candidate.get('Location', '')
+            )
+            source_url = safe_str_conversion(
+                raw_candidate.get('sourceURL') or raw_candidate.get('SourceURL', '')
+            )
+            
+            # Create and return the profile
+            return CandidateProfile(
+                email=email,
+                full_name=full_name,
+                phone=phone,
+                resume_text=resume_text,
+                skills=skills,
+                experience_years=experience_years,
+                education=education,
+                certifications=certifications,
+                previous_roles=previous_roles,
+                industries=industries,
+                location=location,
+                source_url=source_url,
+                skill_proficiency=skill_proficiency,
+                seniority_level=seniority
+            )
+            
+        except Exception as e:
+            logger.error(f"Error creating candidate profile for {raw_candidate.get('email', 'unknown')}: {e}")
+            
+            # Create a minimal fallback profile
+            email = raw_candidate.get('email') or raw_candidate.get('Email') or f"error_candidate_{int(time.time())}@temp.com"
+            return CandidateProfile(
+                email=email,
+                full_name=safe_str_conversion(raw_candidate.get('full_name') or raw_candidate.get('FullName'), 'Error Processing Candidate'),
+                phone='',
+                resume_text='Error processing resume data',
+                skills=[],
+                experience_years=0,
+                education='',
+                certifications=[],
+                previous_roles=[],
+                industries=[],
+                location='',
+                source_url='',
+                skill_proficiency={},
+                seniority_level='Unknown'
+            )
+
+    def _safe_convert_experience(self, experience_raw: Any) -> int:
+        """Safely convert experience to integer"""
+        try:
+            if experience_raw is None:
+                return 0
+
+            if isinstance(experience_raw, (int, float)):
+                return int(experience_raw)
+
+            if isinstance(experience_raw, str):
+                if not experience_raw.strip():
+                    return 0
+                numbers = re.findall(r'\d+\.?\d*', str(experience_raw))
+                if numbers:
+                    return int(float(numbers[0]))
+                else:
+                    return 0
+
+            return int(float(str(experience_raw)))
+        except (ValueError, TypeError, AttributeError) as e:
+            logger.warning(f"Could not convert experience '{experience_raw}': {e}. Returning 0.")
+            return 0
+
+    def _determine_seniority_from_text(self, text: str, experience_years: int) -> str:
+        """Determines seniority level based on text and experience."""
+        text_lower = text.lower()
+        if "senior" in text_lower or "lead" in text_lower or "principal" in text_lower or experience_years >= 7:
+            return "Senior"
+        elif "mid-level" in text_lower or "experienced" in text_lower or (experience_years >= 3 and experience_years < 7):
+            return "Mid-Level"
+        elif "junior" in text_lower or "entry-level" in text_lower or experience_years < 3:
+            return "Junior"
+        return "Not Specified"
+
+    def _extract_industries(self, text: str) -> List[str]:
+        """Extract industries from resume text."""
+        industries = []
+        text_lower = text.lower()
+        if "healthcare" in text_lower or "medical" in text_lower:
+            industries.append("Healthcare")
+        if "finance" in text_lower or "banking" in text_lower:
+            industries.append("Finance")
+        if "software" in text_lower or "tech" in text_lower:
+            industries.append("Software/IT")
+        return industries[:3]
+
+    def _extract_roles(self, text: str) -> List[str]:
+        """Extract previous roles/titles from text."""
+        roles = []
+        matches = re.findall(r'(software engineer|data scientist|project manager|product manager|devops engineer)', text, re.IGNORECASE)
+        roles.extend(list(set(matches)))
+        return roles[:5]
+
+    def index_candidates(self, raw_candidates: List[Dict]):
+        """Process raw candidate data and build/update the FAISS index."""
+        if not raw_candidates:
+            logger.warning("No candidates provided for indexing.")
+            return
+
+        start_time = time.time()
+        
+        # Clean up the data first
+        cleaned_candidates = self.cleanup_candidate_data(raw_candidates)
+        
+        new_candidates = {}
+        new_embeddings_list = []
+
+        # Process candidates in smaller batches to avoid memory issues
+        batch_size = 10
+        total_processed = 0
+        
+        for batch_start in range(0, len(cleaned_candidates), batch_size):
+            batch_end = min(batch_start + batch_size, len(cleaned_candidates))
+            batch = cleaned_candidates[batch_start:batch_end]
+            
+            logger.info(f"Processing batch {batch_start//batch_size + 1}: candidates {batch_start+1}-{batch_end}")
+            
+            for raw_candidate in batch:
+                try:
+                    profile = self._create_candidate_profile(raw_candidate)
+                    new_candidates[profile.email] = profile
+
+                    # Use combined_text for embedding
+                    embedding = self.embedding_service.encode(profile.combined_text, model_type="technical")
+                    new_embeddings_list.append(embedding)
+                    total_processed += 1
+
+                except Exception as e:
+                    logger.error(f"Error processing candidate {raw_candidate.get('email', 'unknown')}: {e}")
+                    continue
+
+        if not new_embeddings_list:
+            logger.warning("No valid candidate embeddings generated. Index not built/updated.")
+            return
+
+        new_embeddings_array = np.array(new_embeddings_list).astype('float32')
+
+        # Initialize FAISS index if it doesn't exist
+        if self.index is None:
+            self.dimension = new_embeddings_array.shape[1]
+            self.index = faiss.IndexFlatIP(self.dimension)
+            logger.info(f"FAISS index created with dimension {self.dimension}.")
+
+        # Add vectors to the index
+        self.index.add(new_embeddings_array)
+        logger.info(f"Added {new_embeddings_array.shape[0]} embeddings to FAISS index.")
+
+        # Update candidate data map
+        self.candidates.update(new_candidates)
+
+        # Update candidate embeddings array
+        if self.candidate_embeddings is None:
+            self.candidate_embeddings = new_embeddings_array
+        else:
+            self.candidate_embeddings = np.vstack([self.candidate_embeddings, new_embeddings_array])
+
+        logger.info(f"Total candidates in system: {len(self.candidates)}")
+        logger.info(f"Total vectors in FAISS index: {self.index.ntotal}")
+
+        self._save_index()
+        end_time = time.time()
+        logger.info(f"Indexing completed in {end_time - start_time:.2f} seconds.")
+        logger.info(f"Successfully processed {total_processed} out of {len(raw_candidates)} candidates.")
+
+    def search(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
+        """
+        Performs an ADVANCED semantic search for candidates based on a complex job query.
+        Returns enhanced results with detailed scoring using the new matching system.
+        """
+        start_time = time.time()
+        self.total_searches += 1
+
+        if self.index is None or self.index.ntotal == 0:
+            logger.warning("FAISS index is not built or empty. Cannot perform search.")
+            return []
+
+        try:
+            logger.info(f"🔍 Starting ADVANCED search for: '{query[:100]}...'")
+            
+            # Step 1: Encode query for semantic search
+            query_embedding = self.embedding_service.encode(query, model_type="general")
+            query_embedding = query_embedding.reshape(1, -1).astype('float32')
+
+            # Step 2: Perform FAISS search (get more candidates for advanced matching)
+            search_k = min(top_k * 5, self.index.ntotal)  # Get more candidates for better matching
+            D, I = self.index.search(query_embedding, search_k)
+
+            # Step 3: Collect candidates for advanced matching
+            candidates_for_matching = []
+            candidate_emails = list(self.candidates.keys())
+            
+            for i, (i_idx, distance) in enumerate(zip(I[0], D[0])):
+                if i_idx == -1:
+                    continue
+                
+                # Fix: Handle index bounds properly
+                if i_idx >= len(candidate_emails):
+                    logger.warning(f"Index {i_idx} out of bounds for candidate_emails (length: {len(candidate_emails)})")
+                    continue
+
+                try:
+                    candidate_email = candidate_emails[i_idx]
+                    candidate_profile = self.candidates.get(candidate_email)
+
+                    if candidate_profile:
+                        # Convert candidate profile to dict for matching system
+                        candidate_dict = candidate_profile.to_dict()
+                        candidates_for_matching.append((candidate_profile, candidate_dict, distance))
+                        logger.debug(f"Added candidate {candidate_email} for matching (distance: {distance:.3f})")
+                    else:
+                        logger.warning(f"Candidate profile not found for email: {candidate_email}")
+                        
+                except Exception as e:
+                    logger.error(f"Error processing candidate at index {i_idx}: {e}")
+                    import traceback
+                    logger.error(f"Full traceback: {traceback.format_exc()}")
+                    continue
+
+            if not candidates_for_matching:
+                logger.warning(f"No valid candidates found for matching. FAISS returned {len(I[0])} indices, candidate_emails has {len(candidate_emails)} entries")
+                logger.warning(f"FAISS indices: {I[0][:10]}...")  # Show first 10 indices
+                logger.warning(f"FAISS distances: {D[0][:10]}...")  # Show first 10 distances
+                
+                # Try fallback: return some candidates anyway for debugging
+                if len(self.candidates) > 0:
+                    logger.info("Attempting fallback with first few candidates...")
+                    fallback_candidates = list(self.candidates.values())[:min(5, len(self.candidates))]
+                    for candidate_profile in fallback_candidates:
+                        candidate_dict = candidate_profile.to_dict()
+                        candidates_for_matching.append((candidate_profile, candidate_dict, 0.5))  # Default distance
+                
+                if not candidates_for_matching:
+                    return []
+
+            logger.info(f"📊 Processing {len(candidates_for_matching)} candidates with advanced matching")
+
+            # Step 4: Apply ADVANCED MATCHING SYSTEM
+            enhanced_results = []
+            for candidate_profile, candidate_dict, faiss_distance in candidates_for_matching:
+                try:
+                    # Use the enhanced matching system
+                    match_score = self.enhanced_matcher.match_candidate_to_job(candidate_dict, query)
+                    
+                    # Combine FAISS semantic similarity with advanced matching
+                    faiss_normalized = ((faiss_distance + 1) / 2) * 100  # Convert to 0-100
+                    
+                    # Weight the scores: 60% advanced matching, 40% semantic similarity
+                    final_score = (match_score.overall_score * 0.6) + (faiss_normalized * 0.4)
+                    
+                    # Create enhanced result with detailed scoring
+                    enhanced_result = {
+                        'email': candidate_profile.email,
+                        'full_name': candidate_profile.full_name,
+                        'phone': candidate_profile.phone,
+                        'skills': candidate_profile.skills,
+                        'experience_years': candidate_profile.experience_years,
+                        'education': candidate_profile.education,
+                        'certifications': candidate_profile.certifications,
+                        'location': candidate_profile.location,
+                        'source_url': candidate_profile.source_url,
+                        'seniority_level': candidate_profile.seniority_level,
+                        
+                        # ENHANCED SCORING DETAILS
+                        'overall_score': final_score,
+                        'advanced_match_score': match_score.overall_score,
+                        'semantic_similarity_score': faiss_normalized,
+                        'skill_match_score': match_score.technical_skills_score,
+                        'experience_relevance': match_score.experience_score,
+                        'seniority_match': match_score.seniority_score,
+                        'education_match': match_score.education_score,
+                        'soft_skills_match': match_score.soft_skills_score,
+                        'location_match': match_score.location_score,
+                        'confidence': match_score.confidence,
+                        'grade': self._get_grade(int(final_score)),
+                        'match_explanation': match_score.match_explanation,
+                        'missing_requirements': match_score.missing_requirements,
+                        'strength_areas': match_score.strength_areas,
+                        
+                        # Additional metadata
+                        'processing_timestamp': time.time(),
+                        'matching_algorithm': 'advanced_v2.0'
+                    }
+                    
+                    enhanced_results.append(enhanced_result)
+                    
+                except Exception as e:
+                    logger.error(f"Error in advanced matching for {candidate_profile.email}: {e}")
+                    # Fallback to basic result
+                    fallback_result = self._format_enhanced_result(candidate_profile, faiss_distance, query, len(enhanced_results) + 1)
+                    enhanced_results.append(fallback_result)
+                    continue
+
+            # Step 5: Sort by final score and return top results
+            enhanced_results.sort(key=lambda x: x['overall_score'], reverse=True)
+            final_results = enhanced_results[:top_k]
+
+            end_time = time.time()
+            duration = end_time - start_time
+            self.total_search_time += duration
+            
+            logger.info(f"✅ ADVANCED search completed in {duration:.4f} seconds")
+            logger.info(f"📈 Found {len(final_results)} highly matched candidates")
+            
+            # Log top result details for debugging
+            if final_results:
+                top_result = final_results[0]
+                logger.info(f"🏆 Top match: {top_result['full_name']} - Score: {top_result['overall_score']:.1f}% - Skills: {top_result['skill_match_score']:.1f}%")
+
+            return final_results
+            
+        except Exception as e:
+            logger.error(f"❌ Advanced search error: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
+            return []
+
+    def _format_enhanced_result(self, candidate: CandidateProfile, score: float, query: str, rank: int) -> Dict[str, Any]:
+        """Format candidate result with enhanced scoring details."""
+        # Calculate detailed scores
+        skill_match_score = self._calculate_skill_match_score(candidate.skills, query)
+        experience_relevance = self._calculate_experience_relevance(candidate.experience_years, query)
+        education_match = self._calculate_education_match(candidate.education, query)
+        
+        # Overall confidence calculation
+        confidence = min(90, max(60, score + (rank * -2)))  # Decrease confidence by rank
+        
+        # Generate match explanation
+        match_explanation = self._generate_match_explanation(candidate, query, skill_match_score)
+        
+        # Determine grade
+        grade = self._get_grade(int(score))
+
+        return {
+            'email': candidate.email,
+            'full_name': candidate.full_name,
+            'phone': candidate.phone,
+            'skills': candidate.skills,
+            'experience_years': candidate.experience_years,
+            'education': candidate.education,
+            'certifications': candidate.certifications,
+            'location': candidate.location,
+            'source_url': candidate.source_url,
+            'seniority_level': candidate.seniority_level,
+            
+            # Enhanced scoring
+            'overall_score': score,
+            'skill_match_score': skill_match_score,
+            'experience_relevance': experience_relevance,
+            'education_match': education_match,
+            'confidence': confidence,
+            'grade': grade,
+            'match_explanation': match_explanation,
+            'rank': rank
+        }
+
+    def _calculate_skill_match_score(self, candidate_skills: List[str], query: str) -> float:
+        """Calculate skill matching score."""
+        if not candidate_skills:
+            return 0.0
+        
+        query_lower = query.lower()
+        query_skills = re.findall(r'\b(?:python|java|javascript|react|node|aws|sql|machine learning|data science)\b', query_lower)
+        
+        if not query_skills:
+            return 50.0  # Default if no specific skills detected
+        
+        candidate_skills_lower = [skill.lower() for skill in candidate_skills]
+        matches = sum(1 for skill in query_skills if any(skill in cs for cs in candidate_skills_lower))
+        
+        return min(95, (matches / len(query_skills)) * 100)
+
+    def _calculate_experience_relevance(self, experience_years: int, query: str) -> float:
+        """Calculate experience relevance score."""
+        # Extract experience requirements from query
+        exp_patterns = re.findall(r'(\d+)\+?\s*years?', query.lower())
+        
+        if not exp_patterns:
+            return 75.0  # Default if no experience mentioned
+        
+        required_exp = int(exp_patterns[0])
+        
+        if experience_years >= required_exp:
+            return min(95, 80 + (experience_years - required_exp) * 2)
+        else:
+            # Penalty for insufficient experience
+            return max(20, 80 - (required_exp - experience_years) * 10)
+
+    def _calculate_education_match(self, education: str, query: str) -> float:
+        """Calculate education matching score."""
+        if not education:
+            return 60.0  # Default for missing education
+        
+        education_lower = education.lower()
+        query_lower = query.lower()
+        
+        # Check for education keywords in query
+        if any(keyword in query_lower for keyword in ['degree', 'bachelor', 'master', 'phd', 'education']):
+            if any(keyword in education_lower for keyword in ['bachelor', 'master', 'phd', 'degree']):
+                return 85.0
+            else:
+                return 40.0
+        
+        return 70.0  # Default when education not specified in query
+
+    def _generate_match_explanation(self, candidate: CandidateProfile, query: str, skill_score: float) -> str:
+        """Generate human-readable match explanation."""
+        explanations = []
+        
+        if skill_score > 80:
+            explanations.append(f"Strong skill alignment with {len(candidate.skills)} relevant skills")
+        elif skill_score > 60:
+            explanations.append("Good skill match with some relevant expertise")
+        else:
+            explanations.append("Basic skill compatibility")
+        
+        if candidate.experience_years > 5:
+            explanations.append(f"Experienced professional with {candidate.experience_years} years")
+        elif candidate.experience_years > 2:
+            explanations.append(f"Mid-level candidate with {candidate.experience_years} years experience")
+        else:
+            explanations.append("Entry-level or junior candidate")
+        
+        if candidate.seniority_level != "Not Specified":
+            explanations.append(f"{candidate.seniority_level} level position fit")
+        
+        return ". ".join(explanations) + "."
+
+    def _get_grade(self, score: int) -> str:
+        """Convert score to grade."""
+        if score >= 85:
+            return 'A'
+        elif score >= 70:
+            return 'B'
+        elif score >= 50:
+            return 'C'
+        else:
+            return 'D'
+
+    def get_performance_stats(self) -> Dict[str, Any]:
+        """Get performance statistics."""
+        avg_search_time = self.total_search_time / max(self.total_searches, 1)
+        cache_hit_rate = self.embedding_service.get_cache_hit_rate()
+        
+        return {
+            'total_searches': self.total_searches,
+            'average_search_time_ms': round(avg_search_time * 1000, 2),
+            'total_candidates': len(self.candidates),
+            'index_type': type(self.index).__name__ if self.index else 'None',
+            'cache_hit_rate': cache_hit_rate,
+            'embedding_dimension': self.dimension
+        }
+
+    def record_feedback(self, candidate_email: str, query: str, is_relevant: bool):
+        """Record feedback for continuous learning."""
+        try:
+            feedback_data = {
+                'candidate_email': candidate_email,
+                'query': query,
+                'is_relevant': is_relevant,
+                'timestamp': time.time()
+            }
+            
+            # Store feedback for future model improvements
+            feedback_file = os.path.join(os.path.dirname(self.index_path) or ".", 'feedback.json')
+            
+            try:
+                if os.path.exists(feedback_file):
+                    with open(feedback_file, 'r') as f:
+                        existing_feedback = json.load(f)
+                else:
+                    existing_feedback = []
+            except Exception as e:
+                logger.warning(f"Could not load existing feedback: {e}")
+                existing_feedback = []
+            
+            existing_feedback.append(feedback_data)
+            
+            # Keep only the last 1000 feedback entries to prevent file from growing too large
+            if len(existing_feedback) > 1000:
+                existing_feedback = existing_feedback[-1000:]
+            
+            try:
+                with open(feedback_file, 'w') as f:
+                    json.dump(existing_feedback, f, indent=2)
+                    
+                logger.info(f"Recorded feedback for {candidate_email}: {'positive' if is_relevant else 'negative'}")
+            except Exception as e:
+                logger.error(f"Failed to save feedback to file: {e}")
+                
+        except Exception as e:
+            logger.error(f"Failed to record feedback: {e}")
+
+
+# Utility function for main.py integration
+def create_ultra_fast_search_system(dynamodb_table) -> Tuple[Any, 'EnhancedRecruitmentSearchSystem']:
+    """
+    Creates and initializes the EnhancedRecruitmentSearchSystem.
+    This is designed to be called once at application startup.
+    """
+    try:
+        search_system = EnhancedRecruitmentSearchSystem(index_path="enhanced_search_index")
+
+        # Get candidates from DynamoDB
+        try:
+            response = dynamodb_table.scan()
+            raw_candidates = response.get('Items', [])
+            logger.info(f"Fetched {len(raw_candidates)} raw candidates from DynamoDB.")
+        except Exception as e:
+            logger.error(f"Failed to fetch candidates from DynamoDB: {e}")
+            return None, None
+
+        if not raw_candidates:
+            logger.warning("No candidates found in DynamoDB. Search system will be empty.")
+            return None, search_system
+
+        # Preprocess candidates before indexing
+        processed_candidates = preprocess_candidates_for_indexing(raw_candidates)
+
+        if processed_candidates:
+            search_system.index_candidates(processed_candidates)
+            logger.info(f"Indexed {len(processed_candidates)} candidates into Enhanced Search System.")
+        else:
+            logger.warning("No valid candidates after preprocessing. Index not built.")
+
+        return True, search_system
+
+    except Exception as e:
+        logger.error(f"Failed to create enhanced search system: {e}")
+        return None, None
+
+
+def preprocess_candidates_for_indexing(raw_candidates: List[Dict]) -> List[Dict]:
+    """Preprocess candidates to fix common data issues - FIXED VERSION"""
+    processed_candidates = []
+
+    for i, candidate in enumerate(raw_candidates):
+        try:
+            # Create a copy to avoid modifying original
+            processed_candidate = candidate.copy()
+
+            # Fix email field
+            if not processed_candidate.get('email') and not processed_candidate.get('Email'):
+                candidate_id_hash = hashlib.sha256(str(candidate).encode()).hexdigest()[:8]
+                processed_candidate['email'] = f"candidate_{i}_{candidate_id_hash}@temp.com"
+
+            # Fix experience field
+            experience_raw = processed_candidate.get('total_experience_years') or processed_candidate.get('Experience')
+            processed_candidate['experience_years'] = _safe_convert_experience_static(experience_raw)
+
+            # Ensure skills is a list
+            skills = processed_candidate.get('skills') or processed_candidate.get('Skills', [])
+            if isinstance(skills, str):
+                processed_candidate['skills'] = [s.strip() for s in skills.split(',') if s.strip()]
+            elif not isinstance(skills, list):
+                processed_candidate['skills'] = []
+
+            # Ensure resume text exists
+            if not (processed_candidate.get('resume_text') or processed_candidate.get('ResumeText')):
+                processed_candidate['resume_text'] = f"Skills: {', '.join(processed_candidate['skills'])}. Experience: {processed_candidate['experience_years']} years."
+
+            processed_candidates.append(processed_candidate)
+
+        except Exception as e:
+            logger.warning(f"Error preprocessing candidate (index {i}): {e}. Skipping this candidate.")
+            continue
+    
+    logger.info(f"📊 Preprocessed {len(processed_candidates)}/{len(raw_candidates)} candidates.")
+    return processed_candidates
+
+
+def _safe_convert_experience_static(experience_raw):
+    """Static version of experience conversion for preprocessing"""
+    try:
+        if experience_raw is None:
+            return 0
+
+        if isinstance(experience_raw, (int, float)):
+            return int(experience_raw)
+
+        if isinstance(experience_raw, str):
+            if not experience_raw.strip():
+                return 0
+            numbers = re.findall(r'\d+\.?\d*', str(experience_raw))
+            if numbers:
+                return int(float(numbers[0]))
+            else:
+                return 0
+
+        return int(float(str(experience_raw)))
+    except (ValueError, TypeError, AttributeError):
+        return 0

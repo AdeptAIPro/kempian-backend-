@@ -1,0 +1,25 @@
+Flask>=2.2
+Flask-SQLAlchemy>=2.5
+Flask-Migrate>=3.1
+boto3>=1.20
+stripe>=5.0
+PyJWT>=2.0
+python-dotenv>=0.21
+mysqlclient>=2.1 
+fastapi
+uvicorn[standard]
+python-dotenv
+httpx
+pydantic
+# AdeptAI Masters Algorithm Dependencies
+nltk>=3.8
+sentence-transformers>=2.2
+openai>=1.0.0
+numpy>=1.21
+requests>=2.28
+scikit-learn>=1.1
+torch>=1.12
+transformers>=4.21
+faiss-cpu>=1.7.0
+lightgbm>=3.3.0
+pandas>=2.0.0
