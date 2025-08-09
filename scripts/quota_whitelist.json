@@ -1,0 +1,9 @@
+{
+  "whitelist_emails": [
+    "vapfull@gmail.com",
+    "api@adeptaipro.com",
+    "education@adeptaipro.com"
+  ],
+  "last_updated": "2025-08-07T14:40:36.418384",
+  "description": "Email accounts exempt from quota restrictions"
+}
