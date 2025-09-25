@@ -1,0 +1,1206 @@
+2025-09-12 16:14:34 | ERROR    | kempian.admin        | Testing admin logging
+2025-09-12 16:14:34 | ERROR    | kempian.auth         | Testing error function
+2025-09-13 17:28:46 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 616, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-13 17:28:53 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UnrecognizedClientException) when calling the ListUsers operation: The security token included in the request is invalid.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 619, in login
+    user_info = get_user_by_email(email)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 165, in get_user_by_email
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 158, in get_user_by_email
+    username = resolve_email_to_username(email)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 151, in resolve_email_to_username
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 133, in resolve_email_to_username
+    response = cognito_client.list_users(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.exceptions.ClientError: An error occurred (UnrecognizedClientException) when calling the ListUsers operation: The security token included in the request is invalid.
+2025-09-13 17:29:56 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UnrecognizedClientException) when calling the ListUsers operation: The security token included in the request is invalid.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 619, in login
+    user_info = get_user_by_email(email)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 165, in get_user_by_email
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 158, in get_user_by_email
+    username = resolve_email_to_username(email)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 151, in resolve_email_to_username
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 133, in resolve_email_to_username
+    response = cognito_client.list_users(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.exceptions.ClientError: An error occurred (UnrecognizedClientException) when calling the ListUsers operation: The security token included in the request is invalid.
+2025-09-14 10:24:09 | ERROR    | kempian.auth         | Error in /auth/signup: An error occurred (UsernameExistsException) when calling the SignUp operation: User already exists
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 85, in signup
+    cognito_signup(email, password, role=tenant_role, user_type=role, full_name=full_name, first_name=first_name, last_name=last_name)
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 47, in cognito_signup
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 39, in cognito_signup
+    response = cognito_client.sign_up(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UsernameExistsException: An error occurred (UsernameExistsException) when calling the SignUp operation: User already exists
+2025-09-14 10:24:11 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 09:56:51 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 09:56:58 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 09:58:15 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 09:59:59 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:32:39 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 10:36:02 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:36:19 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:37:49 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 10:41:38 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 10:46:47 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 10:46:58 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 10:52:14 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UserNotConfirmedException: An error occurred (UserNotConfirmedException) when calling the InitiateAuth operation: User is not confirmed.
+2025-09-15 10:53:18 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:55:15 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:55:24 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:55:52 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 10:58:42 | ERROR    | kempian.auth         | Error in /auth/confirm: An error occurred (CodeMismatchException) when calling the ConfirmSignUp operation: Invalid verification code provided, please try again.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 499, in confirm
+    cognito_confirm_signup(email, code)
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 58, in cognito_confirm_signup
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 51, in cognito_confirm_signup
+    response = cognito_client.confirm_sign_up(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.CodeMismatchException: An error occurred (CodeMismatchException) when calling the ConfirmSignUp operation: Invalid verification code provided, please try again.
+2025-09-15 11:05:04 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 11:05:06 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 11:05:10 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 11:05:12 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 12:18:49 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 12:18:53 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 12:19:05 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 12:19:15 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 12:21:27 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 12:21:33 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 13:42:14 | ERROR    | kempian.admin        | Error getting all emails: 'str' object has no attribute 'isoformat'
+2025-09-15 13:42:14 | ERROR    | kempian.admin        | Error getting all emails: 'str' object has no attribute 'isoformat'
+2025-09-15 14:18:50 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 15:54:28 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 16:01:39 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 16:16:59 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 16:17:04 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 16:17:06 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 16:17:09 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-15 16:41:23 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 16:41:34 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-15 18:37:54 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-16 11:03:28 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-16 11:03:30 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-16 11:03:57 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-16 11:04:00 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-17 13:43:55 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-17 13:43:57 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-17 13:44:11 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 13:02:32 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 13:02:34 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 14:18:36 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 14:18:39 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 14:18:41 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 14:18:44 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 14:18:46 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-18 14:18:48 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-22 16:53:48 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-22 16:53:50 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-22 17:27:20 | ERROR    | kempian.auth         | Token validation failed: An error occurred (NotAuthorizedException) when calling the GetUser operation: Invalid Access Token
+2025-09-22 17:27:20 | ERROR    | kempian.auth         | Token validation failed: An error occurred (NotAuthorizedException) when calling the GetUser operation: Invalid Access Token
+2025-09-22 17:27:32 | ERROR    | kempian.auth         | Token validation failed: An error occurred (NotAuthorizedException) when calling the GetUser operation: Invalid Access Token
+2025-09-22 17:27:33 | ERROR    | kempian.auth         | Token validation failed: An error occurred (NotAuthorizedException) when calling the GetUser operation: Invalid Access Token
+2025-09-22 17:28:06 | ERROR    | kempian.auth         | Token validation failed: An error occurred (NotAuthorizedException) when calling the GetUser operation: Invalid Access Token
+2025-09-22 17:28:10 | ERROR    | kempian.auth         | Token validation failed: An error occurred (NotAuthorizedException) when calling the GetUser operation: Invalid Access Token
+2025-09-22 23:37:32 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-22 23:48:17 | ERROR    | kempian.admin        | Error deleting candidate 569: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(pymysql.err.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`kempianDB`.`job_applications`, CONSTRAINT `job_applications_ibfk_2` FOREIGN KEY (`applicant_id`) REFERENCES `users` (`id`))')
+[SQL: UPDATE job_applications SET applicant_id=%(applicant_id)s, updated_at=%(updated_at)s WHERE job_applications.id = %(job_applications_id)s]
+[parameters: [{'applicant_id': None, 'updated_at': datetime.datetime(2025, 9, 22, 18, 18, 16, 684931), 'job_applications_id': 3}, {'applicant_id': None, 'updated_at': datetime.datetime(2025, 9, 22, 18, 18, 16, 684931), 'job_applications_id': 6}]]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-09-22 23:52:31 | ERROR    | kempian.auth         | Error cleaning up orphaned user dolan57912@cnguopin.com: (pymysql.err.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`kempianDB`.`user_trials`, CONSTRAINT `user_trials_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))')
+[SQL: UPDATE user_trials SET user_id=%(user_id)s, updated_at=%(updated_at)s WHERE user_trials.id = %(user_trials_id)s]
+[parameters: {'user_id': None, 'updated_at': datetime.datetime(2025, 9, 22, 18, 22, 31, 255887), 'user_trials_id': 106}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-09-22 23:52:33 | ERROR    | kempian.auth         | Job seeker signup error: (pymysql.err.IntegrityError) (1062, "Duplicate entry 'dolan57912@cnguopin.com' for key 'users.email'")
+[SQL: INSERT INTO users (tenant_id, email, password_hash, `role`, user_type, company_name, linkedin_id, created_at, updated_at) VALUES (%(tenant_id)s, %(email)s, %(password_hash)s, %(role)s, %(user_type)s, %(company_name)s, %(linkedin_id)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'tenant_id': 543, 'email': 'dolan57912@cnguopin.com', 'password_hash': None, 'role': 'job_seeker', 'user_type': 'job_seeker', 'company_name': None, 'linkedin_id': None, 'created_at': datetime.datetime(2025, 9, 22, 18, 22, 33, 298144), 'updated_at': datetime.datetime(2025, 9, 22, 18, 22, 33, 298144)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 822, in _read_query_result
+    result.read()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry 'dolan57912@cnguopin.com' for key 'users.email'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 193, in signup_jobseeker
+    db.session.commit()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\scoping.py", line 598, in commit
+    return self._proxied.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1969, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1256, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1231, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 4312, in flush
+    self._flush(objects)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 4447, in _flush
+    with util.safe_reraise():
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 4408, in _flush
+    flush_context.execute()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1226, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\sql\elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1639, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 2343, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 822, in _read_query_result
+    result.read()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry 'dolan57912@cnguopin.com' for key 'users.email'")
+[SQL: INSERT INTO users (tenant_id, email, password_hash, `role`, user_type, company_name, linkedin_id, created_at, updated_at) VALUES (%(tenant_id)s, %(email)s, %(password_hash)s, %(role)s, %(user_type)s, %(company_name)s, %(linkedin_id)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'tenant_id': 543, 'email': 'dolan57912@cnguopin.com', 'password_hash': None, 'role': 'job_seeker', 'user_type': 'job_seeker', 'company_name': None, 'linkedin_id': None, 'created_at': datetime.datetime(2025, 9, 22, 18, 22, 33, 298144), 'updated_at': datetime.datetime(2025, 9, 22, 18, 22, 33, 298144)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-09-22 23:52:34 | ERROR    | kempian.auth         | Full traceback: Traceback (most recent call last):
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 822, in _read_query_result
+    result.read()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry 'dolan57912@cnguopin.com' for key 'users.email'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 193, in signup_jobseeker
+    db.session.commit()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\scoping.py", line 598, in commit
+    return self._proxied.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1969, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1256, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1231, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 4312, in flush
+    self._flush(objects)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 4447, in _flush
+    with util.safe_reraise():
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 4408, in _flush
+    flush_context.execute()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1226, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\sql\elements.py", line 516, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1639, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 2343, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 153, in execute
+    result = self._query(query)
+             ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\cursors.py", line 322, in _query
+    conn.query(q)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 822, in _read_query_result
+    result.read()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry 'dolan57912@cnguopin.com' for key 'users.email'")
+[SQL: INSERT INTO users (tenant_id, email, password_hash, `role`, user_type, company_name, linkedin_id, created_at, updated_at) VALUES (%(tenant_id)s, %(email)s, %(password_hash)s, %(role)s, %(user_type)s, %(company_name)s, %(linkedin_id)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'tenant_id': 543, 'email': 'dolan57912@cnguopin.com', 'password_hash': None, 'role': 'job_seeker', 'user_type': 'job_seeker', 'company_name': None, 'linkedin_id': None, 'created_at': datetime.datetime(2025, 9, 22, 18, 22, 33, 298144), 'updated_at': datetime.datetime(2025, 9, 22, 18, 22, 33, 298144)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+2025-09-22 23:53:44 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 09:10:39 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:10:41 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:11:07 | ERROR    | kempian.auth         | Error in /auth/login: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 644, in connect
+    sock = socket.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 851, in create_connection
+    raise exceptions[0]
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 836, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 3292, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 1269, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 716, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\impl.py", line 169, in _do_get
+    with util.safe_reraise():
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\impl.py", line 167, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 678, in __init__
+    self.__connect()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 902, in __connect
+    with util.safe_reraise():
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\default.py", line 616, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 358, in __init__
+    self.connect()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 711, in connect
+    raise exc
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 694, in login
+    db_user = User.query.filter_by(email=email).first()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\query.py", line 2748, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\query.py", line 2847, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 2308, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 2180, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 2047, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\orm\session.py", line 1143, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 3268, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 147, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 2430, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\base.py", line 3292, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 452, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 1269, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 716, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\impl.py", line 169, in _do_get
+    with util.safe_reraise():
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\impl.py", line 167, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 393, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 678, in __init__
+    self.__connect()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 902, in __connect
+    with util.safe_reraise():
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\pool\base.py", line 898, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\create.py", line 637, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\sqlalchemy\engine\default.py", line 616, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 358, in __init__
+    self.connect()
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymysql\connections.py", line 711, in connect
+    raise exc
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:22:18 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:22:21 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:22:27 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:22:30 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 09:33:58 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 09:34:05 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 11:07:10 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 11:07:13 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 11:07:15 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 11:07:17 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 11:07:20 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 15:28:26 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 15:28:35 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 15:29:00 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 15:29:12 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 15:29:15 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 15:39:26 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 16:07:02 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-23 21:20:18 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:20:21 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:13 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:15 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:18 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:20 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:22 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:24 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:29 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-23 21:21:32 | ERROR    | kempian.auth         | Error getting user image info: (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-24 11:53:58 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+2025-09-24 20:20:46 | ERROR    | kempian.auth         | Error in /auth/login: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
+Traceback (most recent call last):
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\routes.py", line 639, in login
+    tokens = cognito_login(email, password)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 72, in cognito_login
+    raise e
+  File "C:\Users\lenov\Videos\kempian\backend\app\auth\cognito.py", line 62, in cognito_login
+    response = cognito_client.initiate_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 565, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenov\AppData\Local\Programs\Python\Python311\Lib\site-packages\botocore\client.py", line 1017, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.NotAuthorizedException: An error occurred (NotAuthorizedException) when calling the InitiateAuth operation: Incorrect username or password.
