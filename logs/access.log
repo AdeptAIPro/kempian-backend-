@@ -1,0 +1,6 @@
+2025-09-15 12:51:10 | INFO     | werkzeug             | 127.0.0.1 - - [15/Sep/2025 12:51:10] "GET /health HTTP/1.1" 200 -
+2025-09-15 12:51:15 | INFO     | werkzeug             | 127.0.0.1 - - [15/Sep/2025 12:51:15] "GET /public/jobs HTTP/1.1" 200 -
+2025-09-15 12:51:20 | INFO     | werkzeug             | 127.0.0.1 - - [15/Sep/2025 12:51:20] "GET /jobs HTTP/1.1" 200 -
+2025-09-15 12:51:25 | INFO     | werkzeug             | 127.0.0.1 - - [15/Sep/2025 12:51:25] "POST /talent/upload-resume-enhanced HTTP/1.1" 200 -
+2025-09-15 12:51:30 | INFO     | werkzeug             | 127.0.0.1 - - [15/Sep/2025 12:51:30] "GET /api/logs/files HTTP/1.1" 200 -
+2025-09-15 12:51:35 | INFO     | werkzeug             | 127.0.0.1 - - [15/Sep/2025 12:51:35] "GET /admin/logs HTTP/1.1" 200 -

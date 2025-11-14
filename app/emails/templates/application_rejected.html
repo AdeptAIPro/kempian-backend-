@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status Update</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2C3ED6;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .job-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .encouragement {
+            background-color: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2C3ED6;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #2C3ED6;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Kempian AI</div>
+            <h1>Application Status Update</h1>
+        </div>
+        
+        <div class="content">
+            <p>Dear {{ candidate_name }},</p>
+            
+            <p>Thank you for your interest in the <strong>{{ job_title }}</strong> position at <strong>{{ company_name }}</strong> and for taking the time to apply for this role.</p>
+            
+            <div class="status-badge status-rejected">
+                Status: Not Selected
+            </div>
+            
+            <p>After careful consideration, we have decided to move forward with other candidates whose qualifications more closely match our current needs for this particular position.</p>
+            
+            <div class="job-details">
+                <h3>Job Details</h3>
+                <p><strong>Position:</strong> {{ job_title }}</p>
+                <p><strong>Company:</strong> {{ company_name }}</p>
+                <p><strong>Location:</strong> {{ job_location }}</p>
+                <p><strong>Applied Date:</strong> {{ applied_date }}</p>
+            </div>
+            
+            <div class="encouragement">
+                <h3>Keep in Touch</h3>
+                <p>While this particular opportunity didn't work out, we were impressed by your application and encourage you to:</p>
+                <ul>
+                    <li>Apply for other positions that match your skills and interests</li>
+                    <li>Follow our company page for future opportunities</li>
+                    <li>Keep your profile updated on our platform</li>
+                    <li>Consider this as valuable experience in your career journey</li>
+                </ul>
+                <p>We believe that the right opportunity is out there for you, and we hope to see your application again in the future.</p>
+            </div>
+            
+            <p>We appreciate your understanding and wish you the very best in your career endeavors.</p>
+            
+            <p>Best regards,<br>
+            The {{ company_name }} Hiring Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>© 2024 Kempian AI. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
