@@ -1,0 +1,22 @@
+# SageMaker Client-Side Requirements
+# NOTE: These are for client-side usage only
+# SageMaker uses managed containers - no Docker image building needed
+# The managed containers already include all ML dependencies (PyTorch, Transformers, etc.)
+
+# SageMaker SDK (Required for deployment and client usage)
+sagemaker>=2.190.0
+boto3>=1.34.0
+
+# Hugging Face Hub (Optional - for local model testing/management)
+huggingface_hub>=0.20.0
+
+# Utilities (Optional - for local development/testing)
+numpy>=1.24.0
+pandas>=2.1.0
+requests>=2.31.0
+
+# Note: The following are NOT needed for deployment
+# They are already included in SageMaker's managed Hugging Face containers:
+# - torch, transformers, accelerate, sentencepiece, protobuf
+# - These are automatically provisioned by SageMaker
+
