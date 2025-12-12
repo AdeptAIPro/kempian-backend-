@@ -1,0 +1,8 @@
+2025-09-15 12:50:43 | ERROR    | kempian.monitoring   | ALERT: High CPU usage: 86.9%
+2025-09-15 12:50:43 | ERROR    | kempian.monitoring   | ALERT: High memory usage: 91.0%
+2025-09-15 12:50:43 | ERROR    | kempian.monitoring   | ALERT: Low cache hit rate: 60.9%
+2025-09-15 12:51:08 | ERROR    | stripe               | error_code=None error_message='Invalid API Key provided: sk_live_************************************************************************************************jCJx' error_param=None error_type=invalid_request_error message='Stripe API error received'
+2025-09-15 12:51:10 | ERROR    | kempian.memory_optimizer | Memory usage: 92.0% (7.2GB used)
+2025-09-15 12:51:10 | ERROR    | kempian.memory_optimizer | Memory usage: 91.9% (7.2GB used)
+2025-09-15 12:52:10 | ERROR    | werkzeug             |  * Detected change in 'C:\\Users\\lenov\\Videos\\kempian\\backend\\app\\talent\\routes.py', reloading
+2025-09-15 12:52:12 | ERROR    | werkzeug             |  * Restarting with stat

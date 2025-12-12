@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Viewer - Kempian</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tables-section {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .table-card {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+
+        .table-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+
+        .table-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .info-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+
+        .table-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .custom-query-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .query-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .query-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .query-button {
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .query-button:hover {
+            background: #2980b9;
+        }
+
+        .query-results {
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .query-form {
+                flex-direction: column;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ Database Viewer</h1>
+            <p>Explore all database tables and their data</p>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-tables">-</div>
+                <div class="stat-label">Total Tables</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-rows">-</div>
+                <div class="stat-label">Total Rows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-columns">-</div>
+                <div class="stat-label">Total Columns</div>
+            </div>
+        </div>
+
+        <div class="tables-section">
+            <h2 class="section-title">📊 Database Tables</h2>
+            <div id="tables-container">
+                <div class="loading">Loading tables...</div>
+            </div>
+        </div>
+
+        <div class="custom-query-section">
+            <h2 class="section-title">🔍 Custom SQL Query</h2>
+            <div class="query-form">
+                <input type="text" class="query-input" id="custom-query" 
+                       placeholder="Enter SELECT query (e.g., SELECT * FROM users LIMIT 10)" 
+                       value="SELECT * FROM users LIMIT 10">
+                <button class="query-button" onclick="executeCustomQuery()">Execute</button>
+            </div>
+            <div id="query-results" class="query-results" style="display: none;">
+                <h3>Query Results</h3>
+                <div id="query-results-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tables = [];
+
+        // Load tables on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTables();
+        });
+
+        async function loadTables() {
+            try {
+                const response = await fetch('/api/tables');
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                tables = data.tables;
+                displayTables();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading tables:', error);
+                document.getElementById('tables-container').innerHTML = 
+                    `<div class="error-message">Error loading tables: ${error.message}</div>`;
+            }
+        }
+
+        function displayTables() {
+            const container = document.getElementById('tables-container');
+            
+            if (tables.length === 0) {
+                container.innerHTML = '<div class="loading">No tables found</div>';
+                return;
+            }
+
+            const tablesGrid = document.createElement('div');
+            tablesGrid.className = 'tables-grid';
+
+            tables.forEach(table => {
+                const tableCard = document.createElement('div');
+                tableCard.className = 'table-card';
+                tableCard.onclick = () => viewTable(table.name);
+                
+                tableCard.innerHTML = `
+                    <div class="table-name">${table.name}</div>
+                    <div class="table-info">
+                        <div class="info-item">
+                            <div class="info-number">${table.columns}</div>
+                            <div class="info-label">Columns</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-number">${table.rows.toLocaleString()}</div>
+                            <div class="info-label">Rows</div>
+                        </div>
+                    </div>
+                    <div class="table-description">
+                        ${table.error ? `Error: ${table.error}` : 'Click to view data'}
+                    </div>
+                `;
+                
+                tablesGrid.appendChild(tableCard);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(tablesGrid);
+        }
+
+        function updateStats() {
+            const totalTables = tables.length;
+            const totalRows = tables.reduce((sum, table) => sum + (table.rows || 0), 0);
+            const totalColumns = tables.reduce((sum, table) => sum + (table.columns || 0), 0);
+
+            document.getElementById('total-tables').textContent = totalTables;
+            document.getElementById('total-rows').textContent = totalRows.toLocaleString();
+            document.getElementById('total-columns').textContent = totalColumns;
+        }
+
+        function viewTable(tableName) {
+            window.open(`/table/${tableName}`, '_blank');
+        }
+
+        async function executeCustomQuery() {
+            const query = document.getElementById('custom-query').value.trim();
+            if (!query) {
+                alert('Please enter a query');
+                return;
+            }
+
+            const resultsDiv = document.getElementById('query-results');
+            const contentDiv = document.getElementById('query-results-content');
+            
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Executing query...</div>';
+
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    contentDiv.innerHTML = `<div class="error-message">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                if (data.data && data.data.length > 0) {
+                    const table = createResultsTable(data.columns, data.data);
+                    contentDiv.innerHTML = `
+                        <h4>Results (${data.row_count} rows)</h4>
+                        ${table}
+                    `;
+                } else {
+                    contentDiv.innerHTML = '<div class="loading">No results found</div>';
+                }
+            } catch (error) {
+                console.error('Error executing query:', error);
+                contentDiv.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+            }
+        }
+
+        function createResultsTable(columns, data) {
+            let table = '<table class="results-table"><thead><tr>';
+            columns.forEach(col => {
+                table += `<th>${col}</th>`;
+            });
+            table += '</tr></thead><tbody>';
+
+            data.forEach(row => {
+                table += '<tr>';
+                columns.forEach(col => {
+                    const value = row[col];
+                    const displayValue = value === null ? 'NULL' : 
+                                       (typeof value === 'string' && value.length > 100 ? 
+                                        value.substring(0, 100) + '...' : value);
+                    table += `<td>${displayValue}</td>`;
+                });
+                table += '</tr>';
+            });
+
+            table += '</tbody></table>';
+            return table;
+        }
+
+        // Allow Enter key to execute query
+        document.getElementById('custom-query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                executeCustomQuery();
+            }
+        });
+    </script>
+</body>
+</html>

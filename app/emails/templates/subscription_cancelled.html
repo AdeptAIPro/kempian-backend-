@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ subject }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; border: 1px solid #dee2e6; }
+        .cancellation-box { background: white; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #dc3545; }
+        .access-info { background: #fff3cd; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ffc107; }
+        .feedback-box { background: #e3f2fd; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+        .button { display: inline-block; background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+        .highlight { color: #dc3545; font-weight: bold; }
+        .plan-name { font-size: 20px; font-weight: bold; color: #dc3545; }
+        .warning { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0; font-size: 24px;">😢 Subscription Cancelled</h1>
+        <p style="margin: 10px 0 0 0; font-size: 16px;">We're sorry to see you go</p>
+    </div>
+    
+    <div class="content">
+        <p style="font-size: 16px; margin-bottom: 20px;">Dear {{ user_name }},</p>
+        
+        <p style="font-size: 16px; margin-bottom: 20px;">
+            We've received your request to cancel your subscription. Your {{ plan_name }} plan has been cancelled 
+            {% if effective_date %}
+            and will remain active until {{ effective_date }}.
+            {% else %}
+            immediately.
+            {% endif %}
+        </p>
+        
+        <div class="cancellation-box">
+            <h3 style="margin-top: 0; color: #dc3545;">Cancellation Details</h3>
+            <p><strong>Cancelled Plan:</strong> <span class="plan-name">{{ plan_name }}</span></p>
+            <p><strong>Cancellation Date:</strong> {{ cancellation_date }}</p>
+            {% if effective_date %}
+            <p><strong>Access Until:</strong> <span class="highlight">{{ effective_date }}</span></p>
+            {% endif %}
+            {% if reason %}
+            <p><strong>Reason:</strong> {{ reason }}</p>
+            {% endif %}
+            {% if refund_amount %}
+            <p><strong>Refund Amount:</strong> <span class="highlight">{{ refund_amount }}</span></p>
+            <p><strong>Refund Status:</strong> {{ refund_status }}</p>
+            {% endif %}
+        </div>
+        
+        {% if effective_date %}
+        <div class="access-info">
+            <h4 style="margin-top: 0; color: #856404;">⚠️ Important: Access Information</h4>
+            <p style="margin: 10px 0; color: #856404;">
+                <strong>You will retain access to all features until {{ effective_date }}.</strong> 
+                After this date, your account will be downgraded to the free tier.
+            </p>
+            <ul style="margin: 10px 0; padding-left: 20px; color: #856404;">
+                <li>Download any important data before {{ effective_date }}</li>
+                <li>Export your search history and saved candidates</li>
+                <li>Contact support if you need help with data export</li>
+            </ul>
+        </div>
+        {% else %}
+        <div class="access-info">
+            <h4 style="margin-top: 0; color: #856404;">⚠️ Access Immediately Revoked</h4>
+            <p style="margin: 10px 0; color: #856404;">
+                Your access to premium features has been immediately revoked. 
+                You can still use the free tier features.
+            </p>
+        </div>
+        {% endif %}
+        
+        <div class="feedback-box">
+            <h4 style="margin-top: 0; color: #1976d2;">💬 We'd Love Your Feedback</h4>
+            <p style="margin: 10px 0; color: #1976d2;">
+                Help us improve by sharing why you cancelled. Your feedback is valuable to us.
+            </p>
+            <div style="text-align: center; margin: 15px 0;">
+                <a href="{{ feedback_url }}" class="button" style="background: #28a745;">Share Feedback</a>
+            </div>
+        </div>
+        
+        <div style="background: #d1ecf1; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+            <h4 style="margin-top: 0; color: #0c5460;">🔄 Want to Come Back?</h4>
+            <p style="margin: 10px 0; color: #0c5460;">
+                We'd love to have you back! You can reactivate your subscription anytime from your dashboard 
+                or by contacting our support team.
+            </p>
+            <div style="text-align: center; margin: 15px 0;">
+                <a href="{{ reactivate_url }}" class="button">Reactivate Subscription</a>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ dashboard_url }}" class="button">Access Your Dashboard</a>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <h4 style="margin-top: 0; color: #495057;">What Happens Next?</h4>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                {% if effective_date %}
+                <li>Continue using premium features until {{ effective_date }}</li>
+                <li>Export your data before the access expires</li>
+                {% endif %}
+                <li>Your account will be downgraded to the free tier</li>
+                <li>You'll receive a final invoice for any remaining charges</li>
+                <li>You can reactivate anytime in the future</li>
+            </ul>
+        </div>
+        
+        <p style="font-size: 16px; margin-bottom: 20px;">
+            Thank you for being a valued customer. We hope to serve you again in the future!
+        </p>
+        
+        <p style="font-size: 16px; margin-bottom: 0;">
+            Best regards,<br>
+            The Talent-Match Team
+        </p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated notification. Please keep this email for your records.</p>
+        <p>Need help? Contact us at <a href="mailto:support@talent-match.com">support@talent-match.com</a></p>
+    </div>
+</body>
+</html>
