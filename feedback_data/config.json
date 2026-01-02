@@ -1,0 +1,7 @@
+{
+  "storage_type": "local",
+  "feedback_file": "backend\\feedback_data\\feedback.json",
+  "backup_enabled": true,
+  "max_backup_files": 5,
+  "created_at": "2024-12-30T00:00:00.000Z"
+}

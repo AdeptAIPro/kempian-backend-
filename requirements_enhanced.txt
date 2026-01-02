@@ -1,0 +1,18 @@
+# Enhanced Resume Parser Dependencies
+# Add these to your main requirements.txt for better resume extraction
+
+# Better PDF extraction
+pdfplumber>=0.9.0
+
+# Enhanced phone number parsing
+phonenumbers>=8.13.0
+
+# Advanced date parsing for experience calculation
+dateparser>=1.1.8
+
+# Better DOC file extraction
+tika>=2.6.0
+
+# Existing dependencies (if not already installed)
+python-docx>=0.8.11
+docx2txt>=0.8

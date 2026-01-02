@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status Update</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2C3ED6;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-reviewed {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .job-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #2C3ED6;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Kempian AI</div>
+            <h1>Application Status Update</h1>
+        </div>
+        
+        <div class="content">
+            <p>Dear {{ candidate_name }},</p>
+            
+            <p>Thank you for your interest in the <strong>{{ job_title }}</strong> position at <strong>{{ company_name }}</strong>. We have reviewed your application and wanted to provide you with an update.</p>
+            
+            <div class="status-badge status-reviewed">
+                Status: Under Review
+            </div>
+            
+            <p>Your application is currently being reviewed by our hiring team. We appreciate the time and effort you put into your application, and we will be in touch with you soon regarding the next steps in our hiring process.</p>
+            
+            <div class="job-details">
+                <h3>Job Details</h3>
+                <p><strong>Position:</strong> {{ job_title }}</p>
+                <p><strong>Company:</strong> {{ company_name }}</p>
+                <p><strong>Location:</strong> {{ job_location }}</p>
+                <p><strong>Applied Date:</strong> {{ applied_date }}</p>
+            </div>
+            
+            <p>We will continue to keep you updated on the progress of your application. If you have any questions in the meantime, please don't hesitate to reach out to us.</p>
+            
+            <p>Thank you for your patience and continued interest in joining our team.</p>
+            
+            <p>Best regards,<br>
+            The {{ company_name }} Hiring Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>© 2024 Kempian AI. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

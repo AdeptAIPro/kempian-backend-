@@ -1,0 +1,4 @@
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: cryptography in c:\users\adeptaiprovinit\appdata\roaming\python\python311\site-packages (46.0.3)
+Requirement already satisfied: cffi>=2.0.0 in c:\users\adeptaiprovinit\appdata\roaming\python\python311\site-packages (from cryptography) (2.0.0)
+Requirement already satisfied: pycparser in c:\users\adeptaiprovinit\appdata\roaming\python\python311\site-packages (from cffi>=2.0.0->cryptography) (2.23)

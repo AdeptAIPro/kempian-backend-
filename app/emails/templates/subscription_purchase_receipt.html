@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ subject }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #28a745; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; border: 1px solid #dee2e6; }
+        .receipt-box { background: white; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #28a745; }
+        .transaction-details { background: #e3f2fd; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+        .button { display: inline-block; background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+        .highlight { color: #28a745; font-weight: bold; }
+        .amount { font-size: 24px; font-weight: bold; color: #28a745; }
+        .plan-name { font-size: 20px; font-weight: bold; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0; font-size: 24px;">Purchase Confirmed</h1>
+        <p style="margin: 10px 0 0 0; font-size: 16px;">Thank you for your subscription</p>
+    </div>
+    
+    <div class="content">
+        <p style="font-size: 16px; margin-bottom: 20px;">Dear {{ user_name }},</p>
+        
+        <p style="font-size: 16px; margin-bottom: 20px;">
+            Thank you for subscribing to {{ plan_name }}! Your payment has been processed successfully.
+        </p>
+        
+        <div class="receipt-box">
+            <h3 style="margin-top: 0; color: #28a745;">Receipt Details</h3>
+            <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
+            <p><strong>Plan:</strong> <span class="plan-name">{{ plan_name }}</span></p>
+            <p><strong>Amount:</strong> <span class="amount">{{ amount_display }}</span></p>
+            <p><strong>Payment Method:</strong> {{ payment_method }}</p>
+            <p><strong>Date:</strong> {{ purchase_date }}</p>
+            <p><strong>Billing Cycle:</strong> {{ billing_cycle }}</p>
+            {% if next_billing_date %}
+            <p><strong>Next Billing Date:</strong> {{ next_billing_date }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="transaction-details">
+            <h4 style="margin-top: 0; color: #1976d2;">What's Included</h4>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><span class="highlight">{{ jd_quota }}</span> Job Description searches per month</li>
+                <li><span class="highlight">{{ max_subaccounts }}</span> Sub-accounts</li>
+                <li>Priority support</li>
+                <li>Advanced analytics</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ dashboard_url }}" class="button">Access Your Dashboard</a>
+        </div>
+        
+        <div style="background: #fff3cd; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ffc107;">
+            <h4 style="margin-top: 0; color: #856404;">Important Information</h4>
+            <ul style="margin: 10px 0; padding-left: 20px; color: #856404;">
+                <li>Your subscription is now active and you can start using all features immediately</li>
+                <li>You will receive an invoice via email shortly</li>
+                <li>You can manage your subscription anytime from your dashboard</li>
+                <li>If you have any questions, please contact our support team</li>
+            </ul>
+        </div>
+        
+        <p style="font-size: 16px; margin-bottom: 20px;">
+            We're excited to have you on board! If you need any assistance getting started, 
+            don't hesitate to reach out to our support team.
+        </p>
+        
+        <p style="font-size: 16px; margin-bottom: 0;">
+            Best regards,<br>
+            The Talent-Match Team
+        </p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated receipt. Please keep this email for your records.</p>
+        <p>Need help? Contact us at <a href="mailto:support@talent-match.com">support@talent-match.com</a></p>
+    </div>
+</body>
+</html>

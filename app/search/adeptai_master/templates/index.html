@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Domain-Aware Recruitment Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            flex-grow: 1;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-input-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #queryInput {
+            width: 60%;
+            padding: 12px 18px;
+            border: 1px solid #ccc;
+            border-radius: 25px 0 0 25px;
+            font-size: 1.1em;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s;
+        }
+
+        #queryInput:focus {
+            border-color: #3498db;
+        }
+
+        .search-button {
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        /* NEW: Domain filtering controls */
+        .domain-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .domain-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .domain-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .domain-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .domain-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .algorithm-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .algorithm-btn {
+            background-color: #ecf0f1;
+            color: #34495e;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .algorithm-btn:hover {
+            background-color: #e0e6e9;
+            border-color: #bdc3c7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .algorithm-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #2980b9;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .algorithm-description {
+            font-size: 0.8em;
+            font-weight: normal;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .algorithm-btn.active .algorithm-description {
+            color: #ecf0f1;
+        }
+
+        /* Enhanced candidate styles with domain indicators */
+        .enhanced-candidate {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid #e9ecef;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .enhanced-candidate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Domain-specific candidate styling */
+        .enhanced-candidate.healthcare {
+            border-left-color: #27ae60;
+        }
+
+        .enhanced-candidate.technology {
+            border-left-color: #3498db;
+        }
+
+        .enhanced-candidate.unknown {
+            border-left-color: #95a5a6;
+        }
+
+        /* Instant search candidate styles - optimized for speed */
+        .instant-candidate {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+            border: 1px solid #e9ecef;
+            border-left: 4px solid #ff6b35;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
+        }
+
+        .instant-candidate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .instant-candidate .candidate-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .candidate-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .grade-a { background: #d4edda; color: #155724; }
+        .grade-b { background: #d1ecf1; color: #0c5460; }
+        .grade-c { background: #fff3cd; color: #856404; }
+        .grade-d { background: #f8d7da; color: #721c24; }
+
+        .confidence-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .confidence-badge.high-confidence {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .confidence-badge.medium-confidence {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* NEW: Domain indicator badge */
+        .domain-indicator {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .domain-indicator.healthcare {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .domain-indicator.technology {
+            background: #cce7ff;
+            color: #0066cc;
+        }
+
+        .domain-indicator.unknown {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .score-breakdown {
+            display: grid;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-bar {
+            flex: 1;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .score-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+            min-width: 35px;
+        }
+
+        .match-explanation {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            margin: 15px 0;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .seniority-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .candidate-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Performance metrics styles */
+        .performance-metrics-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 10px;
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #d4eaf2;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .metric-card {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card h4 {
+            color: #3498db;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .metric-card p {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        /* NEW: Domain statistics section */
+        .domain-stats-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .domain-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .domain-stat-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .domain-stat-card.healthcare {
+            border-left-color: #27ae60;
+        }
+
+        .domain-stat-card.technology {
+            border-left-color: #3498db;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #34495e;
+            color: #ecf0f1;
+            text-align: center;
+            font-size: 0.9em;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Behavioral Analysis Styles */
+        .behavioural-analysis-section {
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .behavioural-analysis-section h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .behavioural-analysis-section .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+        }
+        
+        .behavioural-analysis-section .metric-card {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .behavioural-analysis-section .metric-card .metric-value {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        
+        .behavioural-analysis-section .metric-card .metric-label {
+            font-size: 10px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .search-input-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #queryInput {
+                width: 80%;
+                border-radius: 25px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .search-button {
+                width: 50%;
+                border-radius: 25px;
+            }
+
+            .algorithm-selector {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .algorithm-btn {
+                width: 80%;
+                max-width: 300px;
+            }
+
+            .candidate-info {
+                grid-template-columns: 1fr;
+            }
+
+            .domain-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 Domain-Aware Recruitment Dashboard</h1>
+    </header>
+
+    <main class="container">
+        <section class="search-section">
+            <h2>Find Your Next Great Hire</h2>
+            <div class="search-input-group">
+                <input type="text" id="queryInput" placeholder="e.g., ICU Nurse with ACLS certification OR Senior Python Developer with AWS" autofocus>
+                <button class="search-button" onclick="performInstantSearch()">
+                    ⚡ Instant Search
+                </button>
+            </div>
+
+            <!-- NEW: Domain filtering controls -->
+            <div class="domain-controls">
+                <div class="domain-toggle">
+                    <input type="checkbox" id="domainFilterToggle" checked>
+                    <label for="domainFilterToggle">🎯 Smart Domain Filtering</label>
+                </div>
+                <div class="domain-status">
+                    <span>Separates:</span>
+                    <span class="domain-badge">🏥 Healthcare</span>
+                    <span class="domain-badge">💻 Technology</span>
+                </div>
+            </div>
+
+            <div class="algorithm-selector">
+                <div class="algorithm-btn active" onclick="selectAlgorithm(event, 'enhanced')">
+                    🚀 Enhanced AI
+                    <span class="algorithm-description">Multi-dimensional precision matching</span>
+                </div>
+                <div class="algorithm-btn" onclick="selectAlgorithm(event, 'semantic')">
+                    🧠 Semantic
+                    <span class="algorithm-description">Traditional semantic search</span>
+                </div>
+                <div class="algorithm-btn" onclick="selectAlgorithm(event, 'llm')">
+                    🤖 LLM Powered
+                    <span class="algorithm-description">Language model ranking</span>
+                </div>
+            </div>
+            
+            <!-- Behavioral Analysis Toggle -->
+            <div style="margin-top: 20px; text-align: center;">
+                <label style="display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="behaviouralAnalysisToggle" style="width: 18px; height: 18px;">
+                    <span style="font-weight: 600; color: #28a745;">🧠 Enable Behavioral Analysis</span>
+                    <span style="font-size: 12px; color: #6c757d;">(Personality, communication, cognitive insights)</span>
+                </label>
+                
+                <button onclick="testBehavioralAnalysis()" style="margin-top: 10px; padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                    🧪 Test Behavioral Analysis
+                </button>
+                
+                <!-- NEW: Explainable AI Dashboard Link -->
+                <div style="margin-top: 15px;">
+                    <a href="explainable_ai_dashboard.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #6f42c1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">
+                        🧠 Explainable AI Dashboard
+                        <span style="font-size: 12px; opacity: 0.9;">(Why every candidate is shown)</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results will appear here -->
+        <section id="summary" class="results-summary"></section>
+        <section id="results" class="results-table-container"></section>
+
+        <section class="performance-metrics-section">
+            <h3>⚡ Performance Metrics</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>Total Searches</h4>
+                    <p id="total-searches">0</p>
+                </div>
+                <div class="metric-card">
+                    <h4>Avg. Search Time</h4>
+                    <p id="avg-search-time">0 ms</p>
+                </div>
+                <div class="metric-card">
+                    <h4>Indexed Candidates</h4>
+                    <p id="indexed-candidates">-</p>
+                </div>
+                <div class="metric-card">
+                    <h4>System Status</h4>
+                    <p id="system-status">Ready</p>
+                </div>
+            </div>
+
+            <!-- NEW: Transparency Section -->
+            <div style="margin-top: 30px; padding: 20px; background: #e8f5e8; border-radius: 10px; border: 1px solid #c3e6cb;">
+                <h4 style="color: #155724; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+                    🔍 Why Every Candidate is Shown
+                </h4>
+                <div style="color: #155724; font-size: 14px; line-height: 1.6;">
+                    <p><strong>Complete Transparency:</strong> The AdeptAI system shows every candidate in the database to ensure:</p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>No Hidden Bias:</strong> You see exactly what data exists</li>
+                        <li><strong>Full Decision Traceability:</strong> Every ranking has a clear explanation</li>
+                        <li><strong>User Control:</strong> AI provides insights, you make final decisions</li>
+                        <li><strong>Learning Opportunity:</strong> Understand why candidates rank as they do</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-style: italic;">
+                        💡 <strong>Click the Explainable AI Dashboard button above</strong> to see detailed breakdowns of how each candidate is scored and ranked.
+                    </p>
+                </div>
+            </div>
+
+            <!-- NEW: Domain statistics -->
+            <div class="domain-stats-section">
+                <h4>🎯 Domain Intelligence</h4>
+                <div class="domain-stats-grid">
+                    <div class="domain-stat-card healthcare">
+                        <h5>🏥 Healthcare</h5>
+                        <p id="healthcare-candidates">-</p>
+                        <small>Candidates</small>
+                    </div>
+                    <div class="domain-stat-card technology">
+                        <h5>💻 Technology</h5>
+                        <p id="technology-candidates">-</p>
+                        <small>Candidates</small>
+                    </div>
+                    <div class="domain-stat-card">
+                        <h5>🔄 Filtered</h5>
+                        <p id="filtered-candidates">-</p>
+                        <small>Mismatched</small>
+                    </div>
+                    <div class="domain-stat-card">
+                        <h5>🎯 Accuracy</h5>
+                        <p id="domain-accuracy">-</p>
+                        <small>Classification</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Enhanced Domain-Aware Recruitment Dashboard. Powered by Advanced AI with Smart Domain Separation.</p>
+    </footer>
+
+    <script>
+        // Enhanced JavaScript with domain awareness
+        const API_BASE_URL = window.location.origin;
+        let currentAlgorithm = 'enhanced';
+        let searchCount = 0;
+        let searchTimes = [];
+        let currentQuery = '';
+        let domainStats = { healthcare: 0, technology: 0, filtered: 0 };
+
+        // Debug function
+        function debugLog(message, data = null) {
+            console.log(`🎯 DOMAIN DEBUG: ${message}`, data || '');
+        }
+
+        // Algorithm Selection
+        function selectAlgorithm(event, algorithm) {
+            debugLog(`Selecting algorithm: ${algorithm}`);
+            
+            document.querySelectorAll('.algorithm-btn').forEach(btn => 
+                btn.classList.remove('active'));
+            event.target.classList.add('active');
+            currentAlgorithm = algorithm;
+            
+            debugLog(`Current algorithm set to: ${currentAlgorithm}`);
+        }
+
+        // INSTANT SEARCH FUNCTION - Fast results in milliseconds
+        async function performInstantSearch() {
+            debugLog("Starting instant search...");
+            
+            const query = document.getElementById('queryInput').value.trim();
+            if (!query) {
+                showError("Please enter a search query!");
+                return;
+            }
+
+            const summaryDiv = document.getElementById('summary');
+            const resultsDiv = document.getElementById('results');
+            
+            // Show loading state
+            summaryDiv.innerHTML = '<div class="loading">⚡ Searching instantly...</div>';
+            resultsDiv.innerHTML = "";
+
+            const startTime = Date.now();
+            currentQuery = query;
+
+            try {
+                debugLog("Sending instant search request to:", `${API_BASE_URL}/search/instant`);
+                debugLog("Request data:", { query, top_k: 10 });
+                
+                const behaviouralAnalysisEnabled = document.getElementById('behaviouralAnalysisToggle').checked;
+                
+                const response = await fetch(`${API_BASE_URL}/search/instant`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        query: query,
+                        top_k: 10,
+                        include_behavioural_analysis: behaviouralAnalysisEnabled
+                    })
+                });
+
+                debugLog("Response status:", response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                debugLog("Response data:", data);
+                
+                const searchTime = Date.now() - startTime;
+                
+                // Update metrics
+                searchCount++;
+                searchTimes.push(searchTime);
+                updateMetrics();
+
+                if (data.error) {
+                    showError(`Error: ${data.error}`);
+                    return;
+                }
+
+                // Display instant search summary
+                const cacheInfo = data.cache_hit ? ' (cached)' : '';
+                const algorithmLabel = '⚡ Instant Search';
+                
+                summaryDiv.innerHTML = `
+                    <div class="success">
+                        ✅ ${data.summary}${cacheInfo}
+                        <span style="float: right;">
+                            ${algorithmLabel} | ⏱️ ${searchTime}ms
+                        </span>
+                    </div>
+                `;
+
+                // Display results
+                if (!data.results || data.results.length === 0) {
+                    resultsDiv.innerHTML = "<p>No matching candidates found.</p>";
+                    return;
+                }
+
+                debugLog(`Displaying ${data.results.length} instant search results`);
+
+                data.results.forEach((candidate, index) => {
+                    debugLog(`Processing candidate ${index + 1}:`, candidate);
+                    const candidateDiv = createInstantSearchCandidateElement(candidate);
+                    resultsDiv.appendChild(candidateDiv);
+                });
+
+            } catch (error) {
+                debugLog("Instant search error:", error);
+                showError(`Instant search failed: ${error.message}`);
+            }
+        }
+
+        // ENHANCED CANDIDATE ELEMENT WITH DOMAIN INDICATORS
+        function createDomainAwareCandidateElement(candidate, isEnhanced, isDomainAware) {
+            const candidateDiv = document.createElement('div');
+            const domain = candidate.Domain || candidate.domain || 'unknown';
+            
+            candidateDiv.className = `${isEnhanced ? 'enhanced-candidate' : 'candidate'} ${domain}`;
+            
+            const gradeClass = `grade-${(candidate.Grade || 'C').toLowerCase()}`;
+            const confidence = candidate.Confidence || 75;
+            const confidenceClass = confidence > 80 ? 'high-confidence' : 
+                                   confidence > 60 ? 'medium-confidence' : '';
+            
+            // Handle different data formats
+            const fullName = candidate.FullName || candidate.full_name || 'Unknown Candidate';
+            const email = candidate.email || 'No email';
+            const phone = candidate.phone || 'Not provided';
+            const skills = candidate.Skills || candidate.skills || [];
+            const experience = candidate.Experience || `${candidate.experience_years || 0} years`;
+            const score = candidate.Score || candidate.overall_score || 0;
+            const grade = candidate.Grade || 'C';
+            
+            // Domain indicator
+            const domainConfidence = candidate.DomainConfidence || 0;
+            const domainEmoji = domain === 'healthcare' ? '🏥' : domain === 'technology' ? '💻' : '❓';
+            
+            let content = '';
+            
+            if (isEnhanced && candidate.SkillMatchScore !== undefined) {
+                // Enhanced display with domain information
+                content = `
+                    <div class="candidate-header">
+                        <div style="flex: 1;">
+                            <div class="candidate-name">
+                                👤 ${fullName}
+                                <span class="score-badge ${gradeClass}">
+                                    ${score}% (${grade})
+                                </span>
+                                <span class="confidence-badge ${confidenceClass}">
+                                    🎯 ${confidence}% confidence
+                                </span>
+                                ${isDomainAware ? `
+                                    <span class="domain-indicator ${domain}">
+                                        ${domainEmoji} ${domain.charAt(0).toUpperCase() + domain.slice(1)}
+                                        ${domainConfidence > 0 ? ` (${(domainConfidence * 100).toFixed(0)}%)` : ''}
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ${candidate.SeniorityLevel ? `<div class="seniority-badge">📊 ${candidate.SeniorityLevel} level</div>` : ''}
+                    </div>
+                    
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <span class="score-label">🛠️ Skills:</span>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${candidate.SkillMatchScore || 0}%"></div>
+                            </div>
+                            <span class="score-text">${candidate.SkillMatchScore || 0}%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">💼 Experience:</span>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${candidate.ExperienceRelevance || 0}%"></div>
+                            </div>
+                            <span class="score-text">${candidate.ExperienceRelevance || 0}%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">🎓 Education:</span>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${candidate.EducationMatch || 0}%"></div>
+                            </div>
+                            <span class="score-text">${candidate.EducationMatch || 0}%</span>
+                        </div>
+                    </div>
+                    
+                    ${candidate.MatchExplanation ? `
+                        <div class="match-explanation">
+                            💡 <strong>Why this match:</strong> ${candidate.MatchExplanation}
+                        </div>
+                    ` : ''}
+                    
+                    ${isDomainAware && candidate.DomainKeywords && candidate.DomainKeywords.length > 0 ? `
+                        <div style="margin-top: 10px;">
+                            <small style="color: #6c757d;">
+                                🎯 <strong>Domain keywords found:</strong> 
+                                ${candidate.DomainKeywords.slice(0, 5).join(', ')}
+                                ${candidate.DomainKeywords.length > 5 ? '...' : ''}
+                            </small>
+                        </div>
+                    ` : ''}
+                    
+                    ${candidate.behavioural_analysis ? `
+                        <div class="behavioural-analysis-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #28a745;">
+                            <h4 style="margin: 0 0 10px 0; color: #28a745;">🧠 Behavioral Analysis</h4>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                                <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                    <div style="font-size: 12px; color: #6c757d;">Leadership</div>
+                                    <div style="font-size: 18px; font-weight: bold; color: #28a745;">
+                                        ${(candidate.behavioural_analysis.personality_traits?.confidence || 0.5) * 100}%
+                                    </div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                    <div style="font-size: 12px; color: #6c757d;">Communication</div>
+                                    <div style="font-size: 18px; font-weight: bold; color: #17a2b8;">
+                                        ${(candidate.behavioural_analysis.communication_style?.confidence_indicators || 0.5) * 100}%
+                                    </div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                    <div style="font-size: 12px; color: #6c757d;">Adaptability</div>
+                                    <div style="font-size: 18px; font-weight: bold; color: #ffc107;">
+                                        ${(candidate.behavioural_analysis.adaptability_score || 0.5) * 100}%
+                                    </div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                    <div style="font-size: 12px; color: #6c757d;">Teamwork</div>
+                                    <div style="font-size: 18px; font-weight: bold; color: #6f42c1;">
+                                        ${(candidate.behavioural_analysis.adaptability_score || 0.5) * 100}%
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            ${candidate.behavioural_analysis.cognitive_complexity ? `
+                                <div style="margin-bottom: 10px;">
+                                    <strong style="color: #495057;">🧠 Cognitive Profile:</strong>
+                                    <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                                        Readability: ${(candidate.behavioural_analysis.cognitive_complexity.readability_score || 0.5) * 100}% | 
+                                        Vocabulary: ${(candidate.behavioural_analysis.cognitive_complexity.vocabulary_diversity || 0.5) * 100}% | 
+                                        Analysis: ${(candidate.behavioural_analysis.cognitive_complexity.analytical_thinking || 0.5) * 100}%
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${candidate.behavioural_analysis.communication_style ? `
+                                <div style="margin-bottom: 10px;">
+                                    <strong style="color: #495057;">💬 Communication Style:</strong>
+                                    <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                                        Formality: ${(candidate.behavioural_analysis.communication_style.formality_level || 0.5) * 100}% | 
+                                        Assertiveness: ${(candidate.behavioural_analysis.communication_style.assertiveness || 0.5) * 100}% | 
+                                        Detail: ${(candidate.behavioural_analysis.communication_style.detail_orientation || 0.5) * 100}%
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div style="font-size: 12px; color: #6c757d; font-style: italic;">
+                                💡 <strong>Overall Assessment:</strong> ${candidate.behavioural_analysis.overall_assessment ? 
+                                    `${(candidate.behavioural_analysis.overall_assessment * 100).toFixed(0)}% - ${candidate.behavioural_analysis.confidence_level || 'Medium'} confidence` : 
+                                    'Analysis completed with behavioral insights'}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+            } else {
+                // Standard display with domain indicator
+                content = `
+                    <div class="candidate-name">
+                        👤 ${fullName}
+                        <span class="score-badge ${gradeClass}">
+                            ${score}% (${grade})
+                        </span>
+                        ${candidate.SemanticScore ? 
+                            `<span class="score-badge" style="background: #e3f2fd; color: #1565c0;">
+                                🧠 Semantic: ${(candidate.SemanticScore * 100).toFixed(1)}%
+                            </span>` : ''}
+                        ${isDomainAware ? `
+                            <span class="domain-indicator ${domain}">
+                                ${domainEmoji} ${domain.charAt(0).toUpperCase() + domain.slice(1)}
+                            </span>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            candidateDiv.innerHTML = `
+                ${content}
+                
+                <div class="candidate-info">
+                    <div class="info-item">
+                        <span class="info-label">📧 Email:</span> ${email}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📱 Phone:</span> ${phone}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">💼 Experience:</span> ${experience}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">🛠️ Skills:</span> 
+                    ${Array.isArray(skills) ? skills.slice(0, 8).map(skill => 
+                        `<span style="background: #e3f2fd; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin: 2px;">${skill}</span>`
+                    ).join('') : 'No skills listed'}
+                    ${Array.isArray(skills) && skills.length > 8 ? `<span style="color: #6c757d;">+${skills.length - 8} more</span>` : ''}
+                </div>
+                
+                ${candidate.sourceURL ? 
+                    `<div style="margin-top: 15px;">
+                        <a href="${candidate.sourceURL}" target="_blank" class="btn btn-small btn-secondary">
+                            📄 View Resume
+                        </a>
+                        <button class="btn btn-small" style="background: #28a745; color: white; margin-left: 10px;" 
+                                onclick="provideFeedback('${email}', 'good', '${currentQuery}')">
+                            👍 Good Match
+                        </button>
+                        <button class="btn btn-small" style="background: #dc3545; color: white; margin-left: 5px;" 
+                                onclick="provideFeedback('${email}', 'bad', '${currentQuery}')">
+                            👎 Poor Match
+                        </button>
+                    </div>` : ''}
+            `;
+            
+            return candidateDiv;
+        }
+
+        // INSTANT SEARCH CANDIDATE ELEMENT - Simplified display for fast results
+        function createInstantSearchCandidateElement(candidate) {
+            const candidateDiv = document.createElement('div');
+            candidateDiv.className = 'candidate instant-candidate';
+            
+            // Handle different data formats
+            const fullName = candidate.FullName || candidate.full_name || 'Unknown Candidate';
+            const email = candidate.email || 'No email';
+            const phone = candidate.phone || 'Not provided';
+            const skills = candidate.Skills || candidate.skills || [];
+            const experience = candidate.Experience || candidate.total_experience_years || 0;
+            const score = candidate.Score || candidate.similarity_score || candidate.final_score || 0;
+            const grade = candidate.Grade || 'C';
+            
+            candidateDiv.innerHTML = `
+                <div class="candidate-name">
+                    👤 ${fullName}
+                    <span class="score-badge grade-${grade.toLowerCase()}">
+                        ${(score * 100).toFixed(1)}% (${grade})
+                    </span>
+                    <span class="score-badge" style="background: #e3f2fd; color: #1565c0;">
+                        ⚡ Instant Match
+                    </span>
+                </div>
+                
+                <div class="candidate-info">
+                    <div class="info-item">
+                        <span class="info-label">📧 Email:</span> ${email}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📱 Phone:</span> ${phone}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">💼 Experience:</span> ${experience} years
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">🛠️ Skills:</span> 
+                    ${Array.isArray(skills) ? skills.slice(0, 6).map(skill => 
+                        `<span style="background: #e3f2fd; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin: 2px;">${skill}</span>`
+                    ).join('') : 'No skills listed'}
+                    ${Array.isArray(skills) && skills.length > 6 ? `<span style="color: #6c757d;">+${skills.length - 6} more</span>` : ''}
+                </div>
+                
+                ${candidate.behavioural_analysis ? `
+                    <div class="behavioural-analysis-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #28a745;">
+                        <h4 style="margin: 0 0 10px 0; color: #28a745;">🧠 Behavioral Analysis</h4>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                            <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                <div style="font-size: 12px; color: #6c757d;">Leadership</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #28a745;">
+                                    ${(candidate.behavioural_analysis.personality_traits?.confidence || 0.5) * 100}%
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                <div style="font-size: 12px; color: #6c757d;">Communication</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #17a2b8;">
+                                    ${(candidate.behavioural_analysis.communication_style?.confidence_indicators || 0.5) * 100}%
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                <div style="font-size: 12px; color: #6c757d;">Adaptability</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #ffc107;">
+                                    ${(candidate.behavioural_analysis.adaptability_score || 0.5) * 100}%
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: white; border-radius: 6px;">
+                                <div style="font-size: 12px; color: #6c757d;">Teamwork</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #6f42c1;">
+                                    ${(candidate.behavioural_analysis.teamwork_indicators || 0.5) * 100}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${candidate.behavioural_analysis.cognitive_complexity ? `
+                            <div style="margin-bottom: 10px;">
+                                <strong style="color: #495057;">🧠 Cognitive Profile:</strong>
+                                <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                                    Readability: ${(candidate.behavioural_analysis.cognitive_complexity.readability_score || 0.5) * 100}% | 
+                                    Vocabulary: ${(candidate.behavioural_analysis.cognitive_complexity.vocabulary_diversity || 0.5) * 100}% | 
+                                    Analysis: ${(candidate.behavioural_analysis.cognitive_complexity.analytical_thinking || 0.5) * 100}%
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${candidate.behavioural_analysis.communication_style ? `
+                            <div style="margin-bottom: 10px;">
+                                <strong style="color: #495057;">💬 Communication Style:</strong>
+                                <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                                    Formality: ${(candidate.behavioural_analysis.communication_style.formality_level || 0.5) * 100}% | 
+                                    Assertiveness: ${(candidate.behavioural_analysis.communication_style.assertiveness || 0.5) * 100}% | 
+                                    Detail: ${(candidate.behavioural_analysis.communication_style.detail_orientation || 0.5) * 100}%
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="font-size: 12px; color: #6c757d; font-style: italic;">
+                            💡 <strong>Overall Assessment:</strong> ${candidate.behavioural_analysis.overall_assessment ? 
+                                `${(candidate.behavioural_analysis.overall_assessment * 100).toFixed(0)}% - ${candidate.behavioural_analysis.confidence_level || 'Medium'} confidence` : 
+                                'Analysis completed with behavioral insights'}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${candidate.sourceURL ? 
+                    `<div style="margin-top: 15px;">
+                        <a href="${candidate.sourceURL}" target="_blank" class="btn btn-small btn-secondary">
+                            📄 View Resume
+                        </a>
+                        <button class="btn btn-small" style="background: #28a745; color: white; margin-left: 10px;" 
+                                onclick="provideFeedback('${email}', 'good', '${currentQuery}')">
+                            👍 Good Match
+                        </button>
+                        <button class="btn btn-small" style="background: #dc3545; color: white; margin-left: 5px;" 
+                                onclick="provideFeedback('${email}', 'bad', '${currentQuery}')">
+                            👎 Poor Match
+                        </button>
+                    </div>` : ''}
+            `;
+            
+            return candidateDiv;
+        }
+
+        // Enhanced feedback function with domain context
+        async function provideFeedback(candidateEmail, feedback, query = '') {
+            try {
+                const response = await fetch(`${API_BASE_URL}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: candidateEmail, 
+                        feedback: feedback,
+                        query: query,
+                        domain_filtering_enabled: document.getElementById('domainFilterToggle').checked
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    const learningNote = data.learning_applied ? ' (Enhanced learning applied)' : '';
+                    const domainNote = data.domain_feedback_recorded ? ' (Domain accuracy improved)' : '';
+                    showSuccess(`✅ Feedback recorded for ${candidateEmail}${learningNote}${domainNote}`);
+                } else {
+                    showError('❌ Failed to record feedback');
+                }
+            } catch (error) {
+                showError(`❌ Feedback error: ${error.message}`);
+            }
+        }
+
+        // Update metrics with domain statistics
+        function updateMetrics() {
+            document.getElementById('total-searches').textContent = searchCount;
+            
+            if (searchTimes.length > 0) {
+                const avgTime = searchTimes.reduce((a, b) => a + b, 0) / searchTimes.length;
+                document.getElementById('avg-search-time').textContent = `${avgTime.toFixed(0)}ms`;
+            }
+        }
+
+        // NEW: Update domain statistics
+        function updateDomainStatistics(stats) {
+            try {
+                const domainDist = stats.domain_distribution || {};
+                const filterStats = stats.filter_stats || {};
+                
+                // Update domain counts
+                document.getElementById('healthcare-candidates').textContent = domainDist.healthcare || 0;
+                document.getElementById('technology-candidates').textContent = domainDist.technology || 0;
+                document.getElementById('filtered-candidates').textContent = filterStats.filtered_candidates || 0;
+                
+                // Calculate and display accuracy
+                const totalClassified = stats.total_classified_candidates || 0;
+                const confidenceDist = stats.confidence_distribution || {};
+                const highConfidence = confidenceDist.high || 0;
+                const accuracy = totalClassified > 0 ? ((highConfidence / totalClassified) * 100).toFixed(0) : 0;
+                document.getElementById('domain-accuracy').textContent = `${accuracy}%`;
+                
+                debugLog("Domain statistics updated:", stats);
+                
+            } catch (error) {
+                debugLog("Error updating domain statistics:", error);
+            }
+        }
+
+        // Fetch and display domain statistics on page load
+        async function loadDomainStatistics() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/domain/statistics`);
+                if (response.ok) {
+                    const stats = await response.json();
+                    updateDomainStatistics(stats);
+                    debugLog("Initial domain statistics loaded:", stats);
+                }
+            } catch (error) {
+                debugLog("Failed to load domain statistics:", error);
+            }
+        }
+
+        // Test domain classification function
+        async function testDomainClassification(testText) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/domain/test`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: testText })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Domain Classification Test:', result);
+                    return result;
+                }
+            } catch (error) {
+                console.error('Domain classification test failed:', error);
+            }
+        }
+
+        // Utility functions
+        function showError(message) {
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.innerHTML = `<div class="error">${message}</div>`;
+            setTimeout(() => summaryDiv.innerHTML = '', 5000);
+        }
+
+        function showSuccess(message) {
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.innerHTML = `<div class="success">${message}</div>`;
+            setTimeout(() => summaryDiv.innerHTML = '', 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog("Page loaded, initializing domain-aware system...");
+            
+            // Test backend connection
+            fetch(`${API_BASE_URL}/test`)
+                .then(response => response.json())
+                .then(data => {
+                    debugLog("Backend test successful:", data);
+                    document.getElementById('system-status').textContent = 'Online';
+                    
+                    // Load domain statistics
+                    loadDomainStatistics();
+                })
+                .catch(error => {
+                    debugLog("Backend test failed:", error);
+                    document.getElementById('system-status').textContent = 'Offline';
+                });
+
+            // Add domain filter toggle handler
+            const domainToggle = document.getElementById('domainFilterToggle');
+            domainToggle.addEventListener('change', function() {
+                const enabled = this.checked;
+                debugLog(`Domain filtering ${enabled ? 'enabled' : 'disabled'}`);
+                
+                // Optionally send to backend to persist setting
+                fetch(`${API_BASE_URL}/api/domain/toggle`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled: enabled })
+                }).catch(error => debugLog("Failed to toggle domain filtering on backend:", error));
+            });
+            
+            // Add behavioral analysis toggle handler
+            const behaviouralToggle = document.getElementById('behaviouralAnalysisToggle');
+            behaviouralToggle.addEventListener('change', function() {
+                const enabled = this.checked;
+                debugLog(`Behavioral analysis ${enabled ? 'enabled' : 'disabled'}`);
+                
+                // Optionally send to backend to persist setting
+                fetch(`${API_BASE_URL}/api/behavioural/toggle`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled: enabled })
+                }).catch(error => debugLog("Failed to toggle behavioral analysis on backend:", error));
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Sample test queries for demonstration
+        function runDomainTests() {
+            console.log("🧪 Running Domain Classification Tests");
+            
+            const testCases = [
+                "Experienced ICU Nurse with ACLS certification and Epic EMR experience",
+                "Senior Python Developer with AWS and machine learning expertise",
+                "Registered Nurse seeking position in emergency department",
+                "Full Stack Engineer with React, Node.js and PostgreSQL skills"
+            ];
+            
+            testCases.forEach(async (testCase, index) => {
+                console.log(`\nTest ${index + 1}: "${testCase}"`);
+                const result = await testDomainClassification(testCase);
+                if (result) {
+                    console.log(`→ Domain: ${result.primary_domain}, Confidence: ${(result.confidence * 100).toFixed(0)}%`);
+                    console.log(`→ Keywords: ${result.keywords_matched.join(', ')}`);
+                }
+            });
+        }
+
+        // Test behavioral analysis function
+        async function testBehavioralAnalysis() {
+            try {
+                const testText = "Experienced software engineer with strong leadership skills, excellent communication abilities, and proven track record of leading cross-functional teams. Demonstrates adaptability in fast-paced environments and strong analytical thinking capabilities.";
+                
+                console.log("🧪 Testing behavioral analysis with:", testText);
+                
+                const response = await fetch(`${API_BASE_URL}/api/behavioural/test`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: testText })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log("✅ Behavioral analysis test successful:", result);
+                    
+                    // Show results in a popup or alert
+                    const analysisResults = result.analysis_results;
+                    const message = `
+🧠 Behavioral Analysis Test Results:
+
+📊 Final Score: ${(analysisResults.final_score * 100).toFixed(1)}%
+🎯 Pipeline Version: ${analysisResults.pipeline_version}
+
+🧠 Behavioral Scores:
+• Leadership: ${(analysisResults.behavioral_scores.get('leadership', 0.5) * 100).toFixed(1)}%
+• Innovation: ${(analysisResults.behavioral_scores.get('innovation', 0.5) * 100).toFixed(1)}%
+• Stability: ${(analysisResults.behavioral_scores.get('stability', 0.5) * 100).toFixed(1)}%
+
+💡 Personality Traits:
+• Confidence: ${(analysisResults.personality_traits.get('confidence', 0.5) * 100).toFixed(1)}%
+• Positivity: ${(analysisResults.personality_traits.get('positivity', 0.5) * 100).toFixed(1)}%
+
+✅ Test completed successfully!
+                    `;
+                    
+                    alert(message);
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+            } catch (error) {
+                console.error("❌ Behavioral analysis test failed:", error);
+                alert(`❌ Behavioral analysis test failed: ${error.message}`);
+            }
+        }
+
+        // Expose test function globally for debugging
+        window.runDomainTests = runDomainTests;
+        window.testDomainClassification = testDomainClassification;
+        window.testBehavioralAnalysis = testBehavioralAnalysis;
+    </script>
+</body>
+</html>

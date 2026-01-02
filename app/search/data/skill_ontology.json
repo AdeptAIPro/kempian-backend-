@@ -1,0 +1,215 @@
+{
+    "skills": [
+      {
+        "skill_id": "react",
+        "canonical_name": "React",
+        "category": "frontend",
+        "level": "framework",
+        "parent_skill_id": "javascript",
+        "aliases": ["reactjs", "react.js", "reactjs", "react native"],
+        "synonyms": ["react framework", "react library"]
+      },
+      {
+        "skill_id": "javascript",
+        "canonical_name": "JavaScript",
+        "category": "frontend",
+        "level": "language",
+        "aliases": ["js", "ecmascript", "node.js", "nodejs"],
+        "synonyms": ["javascript programming", "js development"]
+      },
+      {
+        "skill_id": "typescript",
+        "canonical_name": "TypeScript",
+        "category": "frontend",
+        "level": "language",
+        "parent_skill_id": "javascript",
+        "aliases": ["ts", "typescript"],
+        "synonyms": ["typescript programming"]
+      },
+      {
+        "skill_id": "angular",
+        "canonical_name": "Angular",
+        "category": "frontend",
+        "level": "framework",
+        "parent_skill_id": "typescript",
+        "aliases": ["angularjs", "angular.js", "angular 2+"],
+        "synonyms": ["angular framework"]
+      },
+      {
+        "skill_id": "vue",
+        "canonical_name": "Vue",
+        "category": "frontend",
+        "level": "framework",
+        "parent_skill_id": "javascript",
+        "aliases": ["vue.js", "vuejs", "vue 3"],
+        "synonyms": ["vue framework"]
+      },
+      {
+        "skill_id": "python",
+        "canonical_name": "Python",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["py", "python3", "python 3"],
+        "synonyms": ["python programming", "python development"]
+      },
+      {
+        "skill_id": "django",
+        "canonical_name": "Django",
+        "category": "backend",
+        "level": "framework",
+        "parent_skill_id": "python",
+        "aliases": ["django framework"],
+        "synonyms": ["django web framework"]
+      },
+      {
+        "skill_id": "flask",
+        "canonical_name": "Flask",
+        "category": "backend",
+        "level": "framework",
+        "parent_skill_id": "python",
+        "aliases": ["flask framework"],
+        "synonyms": ["flask web framework"]
+      },
+      {
+        "skill_id": "java",
+        "canonical_name": "Java",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["java programming", "java development"],
+        "synonyms": ["java language", "java platform"]
+      },
+      {
+        "skill_id": "spring",
+        "canonical_name": "Spring",
+        "category": "backend",
+        "level": "framework",
+        "parent_skill_id": "java",
+        "aliases": ["spring framework", "spring boot"],
+        "synonyms": ["spring java", "spring mvc"]
+      },
+      {
+        "skill_id": "nodejs",
+        "canonical_name": "Node.js",
+        "category": "backend",
+        "level": "runtime",
+        "parent_skill_id": "javascript",
+        "aliases": ["node", "nodejs", "express.js"],
+        "synonyms": ["node.js runtime", "node development"]
+      },
+      {
+        "skill_id": "aws",
+        "canonical_name": "AWS",
+        "category": "cloud",
+        "level": "platform",
+        "aliases": ["amazon web services", "amazon aws"],
+        "synonyms": ["aws cloud", "amazon cloud"]
+      },
+      {
+        "skill_id": "azure",
+        "canonical_name": "Azure",
+        "category": "cloud",
+        "level": "platform",
+        "aliases": ["microsoft azure", "azure cloud"],
+        "synonyms": ["azure platform"]
+      },
+      {
+        "skill_id": "gcp",
+        "canonical_name": "Google Cloud",
+        "category": "cloud",
+        "level": "platform",
+        "aliases": ["gcp", "google cloud platform"],
+        "synonyms": ["google cloud", "gcp platform"]
+      },
+      {
+        "skill_id": "docker",
+        "canonical_name": "Docker",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["docker container", "dockerization"],
+        "synonyms": ["containerization", "containers"]
+      },
+      {
+        "skill_id": "kubernetes",
+        "canonical_name": "Kubernetes",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["k8s", "kube"],
+        "synonyms": ["container orchestration", "k8s orchestration"]
+      },
+      {
+        "skill_id": "sql",
+        "canonical_name": "SQL",
+        "category": "database",
+        "level": "language",
+        "aliases": ["structured query language"],
+        "synonyms": ["sql database", "sql queries"]
+      },
+      {
+        "skill_id": "postgresql",
+        "canonical_name": "PostgreSQL",
+        "category": "database",
+        "level": "database",
+        "parent_skill_id": "sql",
+        "aliases": ["postgres", "postgresql"],
+        "synonyms": ["postgres database"]
+      },
+      {
+        "skill_id": "mongodb",
+        "canonical_name": "MongoDB",
+        "category": "database",
+        "level": "database",
+        "aliases": ["mongo", "mongodb"],
+        "synonyms": ["nosql database", "document database"]
+      },
+      {
+        "skill_id": "mysql",
+        "canonical_name": "MySQL",
+        "category": "database",
+        "level": "database",
+        "parent_skill_id": "sql",
+        "aliases": ["mysql"],
+        "synonyms": ["mysql database"]
+      },
+      {
+        "skill_id": "redis",
+        "canonical_name": "Redis",
+        "category": "database",
+        "level": "database",
+        "aliases": ["redis"],
+        "synonyms": ["redis cache", "redis database"]
+      },
+      {
+        "skill_id": "git",
+        "canonical_name": "Git",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["git version control", "github", "gitlab"],
+        "synonyms": ["version control", "source control"]
+      },
+      {
+        "skill_id": "ci_cd",
+        "canonical_name": "CI/CD",
+        "category": "devops",
+        "level": "practice",
+        "aliases": ["continuous integration", "continuous deployment", "cicd"],
+        "synonyms": ["ci cd pipeline", "devops pipeline"]
+      },
+      {
+        "skill_id": "terraform",
+        "canonical_name": "Terraform",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["terraform"],
+        "synonyms": ["infrastructure as code", "iac"]
+      },
+      {
+        "skill_id": "jenkins",
+        "canonical_name": "Jenkins",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["jenkins"],
+        "synonyms": ["jenkins ci", "jenkins pipeline"]
+      }
+    ]
+  }
+  

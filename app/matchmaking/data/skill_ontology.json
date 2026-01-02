@@ -1,0 +1,312 @@
+{
+    "skills": [
+      {
+        "skill_id": "react",
+        "canonical_name": "React",
+        "category": "frontend",
+        "level": "framework",
+        "parent_skill_id": "javascript",
+        "aliases": ["reactjs", "react.js", "reactjs", "react native", "reactjs", "reactjs"],
+        "synonyms": ["react framework", "react library", "react development"]
+      },
+      {
+        "skill_id": "javascript",
+        "canonical_name": "JavaScript",
+        "category": "frontend",
+        "level": "language",
+        "aliases": ["js", "ecmascript", "node.js", "nodejs", "javascript", "js programming"],
+        "synonyms": ["javascript programming", "js development", "javascript development"]
+      },
+      {
+        "skill_id": "typescript",
+        "canonical_name": "TypeScript",
+        "category": "frontend",
+        "level": "language",
+        "parent_skill_id": "javascript",
+        "aliases": ["ts", "typescript"],
+        "synonyms": ["typescript programming", "ts development"]
+      },
+      {
+        "skill_id": "angular",
+        "canonical_name": "Angular",
+        "category": "frontend",
+        "level": "framework",
+        "parent_skill_id": "typescript",
+        "aliases": ["angularjs", "angular.js", "angular 2+", "angularjs"],
+        "synonyms": ["angular framework", "angular development"]
+      },
+      {
+        "skill_id": "vue",
+        "canonical_name": "Vue",
+        "category": "frontend",
+        "level": "framework",
+        "parent_skill_id": "javascript",
+        "aliases": ["vue.js", "vuejs", "vue 3"],
+        "synonyms": ["vue framework", "vue development"]
+      },
+      {
+        "skill_id": "python",
+        "canonical_name": "Python",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["py", "python3", "python 3", "python programming"],
+        "synonyms": ["python programming", "python development", "python coding"]
+      },
+      {
+        "skill_id": "django",
+        "canonical_name": "Django",
+        "category": "backend",
+        "level": "framework",
+        "parent_skill_id": "python",
+        "aliases": ["django framework", "django web"],
+        "synonyms": ["django web framework", "django development"]
+      },
+      {
+        "skill_id": "flask",
+        "canonical_name": "Flask",
+        "category": "backend",
+        "level": "framework",
+        "parent_skill_id": "python",
+        "aliases": ["flask framework", "flask web"],
+        "synonyms": ["flask web framework", "flask development"]
+      },
+      {
+        "skill_id": "java",
+        "canonical_name": "Java",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["java programming", "java development", "java"],
+        "synonyms": ["java language", "java platform", "java coding"]
+      },
+      {
+        "skill_id": "spring",
+        "canonical_name": "Spring",
+        "category": "backend",
+        "level": "framework",
+        "parent_skill_id": "java",
+        "aliases": ["spring framework", "spring boot", "spring mvc"],
+        "synonyms": ["spring java", "spring development"]
+      },
+      {
+        "skill_id": "nodejs",
+        "canonical_name": "Node.js",
+        "category": "backend",
+        "level": "runtime",
+        "parent_skill_id": "javascript",
+        "aliases": ["node", "nodejs", "express.js", "express"],
+        "synonyms": ["node.js runtime", "node development", "nodejs development"]
+      },
+      {
+        "skill_id": "aws",
+        "canonical_name": "AWS",
+        "category": "cloud",
+        "level": "platform",
+        "aliases": ["amazon web services", "amazon aws", "aws cloud"],
+        "synonyms": ["aws cloud", "amazon cloud", "aws services"]
+      },
+      {
+        "skill_id": "azure",
+        "canonical_name": "Azure",
+        "category": "cloud",
+        "level": "platform",
+        "aliases": ["microsoft azure", "azure cloud"],
+        "synonyms": ["azure platform", "microsoft cloud"]
+      },
+      {
+        "skill_id": "gcp",
+        "canonical_name": "Google Cloud",
+        "category": "cloud",
+        "level": "platform",
+        "aliases": ["gcp", "google cloud platform"],
+        "synonyms": ["google cloud", "gcp platform"]
+      },
+      {
+        "skill_id": "docker",
+        "canonical_name": "Docker",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["docker container", "dockerization"],
+        "synonyms": ["containerization", "containers", "docker containers"]
+      },
+      {
+        "skill_id": "kubernetes",
+        "canonical_name": "Kubernetes",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["k8s", "kube"],
+        "synonyms": ["container orchestration", "k8s orchestration"]
+      },
+      {
+        "skill_id": "sql",
+        "canonical_name": "SQL",
+        "category": "database",
+        "level": "language",
+        "aliases": ["structured query language", "sql queries"],
+        "synonyms": ["sql database", "sql programming"]
+      },
+      {
+        "skill_id": "postgresql",
+        "canonical_name": "PostgreSQL",
+        "category": "database",
+        "level": "database",
+        "parent_skill_id": "sql",
+        "aliases": ["postgres", "postgresql"],
+        "synonyms": ["postgres database", "postgresql database"]
+      },
+      {
+        "skill_id": "mongodb",
+        "canonical_name": "MongoDB",
+        "category": "database",
+        "level": "database",
+        "aliases": ["mongo", "mongodb"],
+        "synonyms": ["nosql database", "document database"]
+      },
+      {
+        "skill_id": "mysql",
+        "canonical_name": "MySQL",
+        "category": "database",
+        "level": "database",
+        "parent_skill_id": "sql",
+        "aliases": ["mysql"],
+        "synonyms": ["mysql database"]
+      },
+      {
+        "skill_id": "redis",
+        "canonical_name": "Redis",
+        "category": "database",
+        "level": "database",
+        "aliases": ["redis"],
+        "synonyms": ["redis cache", "redis database"]
+      },
+      {
+        "skill_id": "git",
+        "canonical_name": "Git",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["git version control", "github", "gitlab", "git"],
+        "synonyms": ["version control", "source control"]
+      },
+      {
+        "skill_id": "ci_cd",
+        "canonical_name": "CI/CD",
+        "category": "devops",
+        "level": "practice",
+        "aliases": ["continuous integration", "continuous deployment", "cicd", "ci/cd"],
+        "synonyms": ["ci cd pipeline", "devops pipeline"]
+      },
+      {
+        "skill_id": "terraform",
+        "canonical_name": "Terraform",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["terraform"],
+        "synonyms": ["infrastructure as code", "iac"]
+      },
+      {
+        "skill_id": "jenkins",
+        "canonical_name": "Jenkins",
+        "category": "devops",
+        "level": "tool",
+        "aliases": ["jenkins"],
+        "synonyms": ["jenkins ci", "jenkins pipeline"]
+      },
+      {
+        "skill_id": "html",
+        "canonical_name": "HTML",
+        "category": "frontend",
+        "level": "language",
+        "aliases": ["html5", "html"],
+        "synonyms": ["html markup", "html development"]
+      },
+      {
+        "skill_id": "css",
+        "canonical_name": "CSS",
+        "category": "frontend",
+        "level": "language",
+        "aliases": ["css3", "css", "stylesheet"],
+        "synonyms": ["css styling", "css development"]
+      },
+      {
+        "skill_id": "asp_net",
+        "canonical_name": "ASP.NET",
+        "category": "backend",
+        "level": "framework",
+        "aliases": ["asp.net", "aspnet", "asp net"],
+        "synonyms": ["asp.net framework", "asp.net development"]
+      },
+      {
+        "skill_id": "csharp",
+        "canonical_name": "C#",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["c#", "csharp", "c sharp"],
+        "synonyms": ["c# programming", "c# development"]
+      },
+      {
+        "skill_id": "php",
+        "canonical_name": "PHP",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["php"],
+        "synonyms": ["php programming", "php development"]
+      },
+      {
+        "skill_id": "ruby",
+        "canonical_name": "Ruby",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["ruby"],
+        "synonyms": ["ruby programming", "ruby development"]
+      },
+      {
+        "skill_id": "go",
+        "canonical_name": "Go",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["golang", "go language"],
+        "synonyms": ["go programming", "golang development"]
+      },
+      {
+        "skill_id": "rust",
+        "canonical_name": "Rust",
+        "category": "backend",
+        "level": "language",
+        "aliases": ["rust"],
+        "synonyms": ["rust programming", "rust development"]
+      },
+      {
+        "skill_id": "oracle",
+        "canonical_name": "Oracle",
+        "category": "database",
+        "level": "database",
+        "parent_skill_id": "sql",
+        "aliases": ["oracle database", "oracle db"],
+        "synonyms": ["oracle sql", "oracle database"]
+      },
+      {
+        "skill_id": "sql_server",
+        "canonical_name": "SQL Server",
+        "category": "database",
+        "level": "database",
+        "parent_skill_id": "sql",
+        "aliases": ["mssql", "sql server", "microsoft sql server"],
+        "synonyms": ["sql server database", "mssql database"]
+      },
+      {
+        "skill_id": "agile",
+        "canonical_name": "Agile",
+        "category": "methodology",
+        "level": "practice",
+        "aliases": ["agile methodology", "agile development", "scrum", "kanban"],
+        "synonyms": ["agile practices", "agile framework"]
+      },
+      {
+        "skill_id": "accounting",
+        "canonical_name": "Accounting",
+        "category": "finance",
+        "level": "skill",
+        "aliases": ["accounting", "bookkeeping", "financial accounting"],
+        "synonyms": ["accounting principles", "financial accounting"]
+      }
+    ]
+  }

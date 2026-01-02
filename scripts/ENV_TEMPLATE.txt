@@ -1,0 +1,189 @@
+# ============================================================================
+# KEMPIAN PAYROLL SYSTEM - ENVIRONMENT VARIABLES TEMPLATE
+# ============================================================================
+# Copy this file to .env and fill in your actual values
+# NEVER commit .env files to version control!
+# ============================================================================
+
+# ============================================================================
+# 🔴 REQUIRED - Database Configuration
+# ============================================================================
+# MySQL/MariaDB connection string
+# Format: mysql+pymysql://username:password@host:port/database_name
+DATABASE_URL=mysql+pymysql://root:password@localhost:3306/kempianDB
+
+# Alternative PostgreSQL connection (if using PostgreSQL)
+# DATABASE_URL=postgresql://username:password@localhost:5432/kempianDB
+
+# ============================================================================
+# 🔴 REQUIRED - Security Configuration
+# ============================================================================
+# Secret key for Flask sessions and encryption
+# Generate with: python -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=your-secret-key-change-in-production-minimum-32-characters
+
+# JWT Secret Key for token generation
+# Can be same as SECRET_KEY or different
+JWT_SECRET_KEY=${SECRET_KEY}
+
+# Payment encryption key (Fernet key)
+# Generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+PAYMENT_ENCRYPTION_KEY=your-fernet-encryption-key-here
+
+# ============================================================================
+# 🔴 REQUIRED - Payment Gateway Configuration (Razorpay for India)
+# ============================================================================
+# Razorpay API Keys (for India payroll payments)
+# Get from: https://dashboard.razorpay.com/app/keys
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxx
+RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
+RAZORPAY_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxx
+
+# ============================================================================
+# 🔴 REQUIRED - AWS Configuration (for Cognito & SES)
+# ============================================================================
+# AWS Cognito for user authentication
+AWS_COGNITO_USER_POOL_ID=us-east-1_xxxxxxxxx
+AWS_COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXXXXX
+AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# AWS SES for email notifications
+AWS_SES_REGION=us-east-1
+SES_SENDER_EMAIL=noreply@yourdomain.com
+
+# ============================================================================
+# 🟡 RECOMMENDED - Application URLs
+# ============================================================================
+# Frontend URL (for CORS and redirects)
+FRONTEND_URL=http://localhost:5173
+
+# Application URL (for webhooks and callbacks)
+APP_URL=http://localhost:8000
+
+# ============================================================================
+# 🟡 RECOMMENDED - Stripe Configuration (for Subscriptions)
+# ============================================================================
+# Stripe Secret Key (for subscription payments)
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxx
+# Stripe Webhook Secret (for webhook signature verification)
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxx
+
+# ============================================================================
+# 🟢 OPTIONAL - LinkedIn Integration
+# ============================================================================
+LINKEDIN_CLIENT_ID=your_linkedin_client_id
+LINKEDIN_CLIENT_SECRET=your_linkedin_client_secret
+LINKEDIN_REDIRECT_URI=http://localhost:5173/linkedin-callback
+
+# ============================================================================
+# 🟢 OPTIONAL - Application Environment
+# ============================================================================
+# Set to 'production' in production environment
+FLASK_ENV=development
+ENV=development
+
+# Debug mode (set to False in production)
+DEBUG=True
+
+# ============================================================================
+# 🟢 OPTIONAL - Payment Configuration
+# ============================================================================
+# Default payment mode for India (NEFT, RTGS, IMPS)
+PAYMENT_MODE_DEFAULT=NEFT
+
+# First payroll safety limits (in paise for India, cents for US)
+FIRST_PAYROLL_MAX_PER_EMPLOYEE=100000
+FIRST_PAYROLL_MAX_TOTAL=1000000
+
+# ============================================================================
+# 🟢 OPTIONAL - Reconciliation Settings
+# ============================================================================
+# Hours threshold for stuck payments
+RECONCILIATION_HOURS_THRESHOLD=2
+
+# Enable/disable cron jobs
+ENABLE_RECONCILIATION_CRON=True
+ENABLE_BALANCE_SYNC_CRON=True
+
+# Cron schedules (cron format)
+RECONCILIATION_CRON_SCHEDULE=*/15 * * * *
+BALANCE_SYNC_CRON_SCHEDULE=*/30 * * * *
+
+# ============================================================================
+# 🟢 OPTIONAL - E-filing API Credentials (for future integration)
+# ============================================================================
+# India Income Tax Portal (when implementing e-filing)
+# INCOME_TAX_PORTAL_USERNAME=your_username
+# INCOME_TAX_PORTAL_PASSWORD=your_password
+# INCOME_TAX_PORTAL_TAN=your_tan_number
+
+# EPFO Portal (when implementing e-filing)
+# EPFO_ESTABLISHMENT_CODE=your_establishment_code
+# EPFO_USERNAME=your_username
+# EPFO_PASSWORD=your_password
+
+# ESIC Portal (when implementing e-filing)
+# ESIC_EMPLOYER_CODE=your_employer_code
+# ESIC_USERNAME=your_username
+# ESIC_PASSWORD=your_password
+
+# IRS E-filing (US - when implementing e-filing)
+# IRS_EIN=your_employer_identification_number
+# IRS_PIN=your_pin
+# IRS_EFILE_USERNAME=your_username
+# IRS_EFILE_PASSWORD=your_password
+
+# HMRC RTI (UK - when implementing e-filing)
+# HMRC_EMPLOYER_REFERENCE=your_employer_reference
+# HMRC_PASSWORD=your_password
+
+# CRA E-filing (Canada - when implementing e-filing)
+# CRA_BUSINESS_NUMBER=your_business_number
+# CRA_ACCESS_CODE=your_access_code
+
+# ATO STP (Australia - when implementing e-filing)
+# ATO_ABN=your_abn
+# ATO_SOFTWARE_ID=your_software_id
+
+# ============================================================================
+# 🟢 OPTIONAL - Currency Exchange Rate API
+# ============================================================================
+# For multi-currency payroll (if using external API)
+# EXCHANGE_RATE_API_KEY=your_api_key
+# EXCHANGE_RATE_API_URL=https://api.exchangerate-api.com/v4/latest
+
+# ============================================================================
+# 🟢 OPTIONAL - Report Generation
+# ============================================================================
+# Directory for generated reports (PDF, XML, etc.)
+REPORT_OUTPUT_DIR=./generated_reports
+
+# ============================================================================
+# 🟢 OPTIONAL - Logging
+# ============================================================================
+# Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+LOG_LEVEL=INFO
+
+# ============================================================================
+# NOTES:
+# ============================================================================
+# 1. All Razorpay credentials can also be configured per-tenant via the
+#    Payroll Settings UI (stored encrypted in database)
+#
+# 2. For production:
+#    - Set FLASK_ENV=production
+#    - Set DEBUG=False
+#    - Use strong SECRET_KEY (minimum 32 characters)
+#    - Use production Razorpay keys (rzp_live_*)
+#    - Use production Stripe keys (sk_live_*)
+#    - Configure proper CORS origins
+#
+# 3. Database connection pooling is configured in app/config.py
+#    Adjust pool_size and max_overflow based on your server capacity
+#
+# 4. E-filing integrations require additional API credentials from respective
+#    government portals. These are optional and can be added when needed.
+# ============================================================================
+

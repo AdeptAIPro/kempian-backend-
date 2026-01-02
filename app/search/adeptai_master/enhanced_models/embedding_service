@@ -1,0 +1,126 @@
+# Enhanced embedding service - COPY THE ENHANCED EMBEDDINGS CODE HERE
+# This is the same code from the earlier artifacts but in a separate file
+
+from sentence_transformers import SentenceTransformer
+import torch
+from transformers import AutoTokenizer, AutoModel
+import numpy as np
+import hashlib
+import logging
+from typing import List, Dict, Optional
+
+logger = logging.getLogger(__name__)
+
+class EnhancedEmbeddingService:
+    def __init__(self, cache_size: int = 1000):
+        # Better general-purpose models
+        self.models = {
+            'e5_large': 'intfloat/e5-large-v2',       # Better than MiniLM
+            'gte_large': 'thenlper/gte-large',        # SOTA general embedding
+            'mpnet': 'sentence-transformers/all-mpnet-base-v2',
+            'minilm': 'all-MiniLM-L6-v2',            # Original model for comparison
+            
+            # Domain-specific options
+            'bio_bert': 'dmis-lab/biobert-base-cased-v1.1',    # For healthcare
+            'code_bert': 'microsoft/codebert-base',             # For software roles
+        }
+        
+        self.loaded_models = {}
+        self.cache = {} if cache_size > 0 else None
+        self.cache_size = cache_size
+        
+        # Load default model
+        self.current_model_name = 'mpnet'
+        self.current_model = self.get_model(self.current_model_name)
+        
+    def get_model(self, model_name: str = None) -> SentenceTransformer:
+        """Get model, loading if necessary"""
+        if model_name is None:
+            model_name = self.current_model_name
+            
+        if model_name not in self.loaded_models:
+            try:
+                model_path = self.models.get(model_name, model_name)
+                self.loaded_models[model_name] = SentenceTransformer(model_path)
+                logger.info(f"Loaded model: {model_path}")
+            except Exception as e:
+                logger.error(f"Failed to load model {model_name}: {e}")
+                # Fallback to basic model
+                fallback_model = 'all-MiniLM-L6-v2'
+                self.loaded_models[model_name] = SentenceTransformer(fallback_model)
+                logger.info(f"Using fallback model: {fallback_model}")
+        
+        return self.loaded_models[model_name]
+    
+    def encode_single(self, text: str, model_name: str = None) -> np.ndarray:
+        """Encode single text with caching"""
+        if self.cache is not None:
+            # Create cache key
+            cache_key = hashlib.md5(f"{model_name or self.current_model_name}:{text}".encode()).hexdigest()
+            
+            if cache_key in self.cache:
+                return self.cache[cache_key]
+            
+            # Manage cache size
+            if len(self.cache) >= self.cache_size:
+                # Remove oldest entry
+                oldest_key = next(iter(self.cache))
+                del self.cache[oldest_key]
+        
+        # Encode text
+        model = self.get_model(model_name)
+        
+        # Add instruction prefix for E5 models
+        if model_name and 'e5' in model_name:
+            text = f"query: {text}"
+        
+        embedding = model.encode(text, convert_to_numpy=True, normalize_embeddings=True)
+        
+        # Cache result
+        if self.cache is not None:
+            self.cache[cache_key] = embedding
+        
+        return embedding
+    
+    def encode_batch(self, texts: List[str], model_name: str = None, batch_size: int = 32) -> np.ndarray:
+        """Encode batch of texts efficiently"""
+        model = self.get_model(model_name)
+        
+        # Add instruction prefix for E5 models
+        if model_name and 'e5' in model_name:
+            texts = [f"passage: {text}" for text in texts]
+        
+        return model.encode(
+            texts,
+            batch_size=batch_size,
+            convert_to_numpy=True,
+            normalize_embeddings=True,
+            show_progress_bar=len(texts) > 50
+        )
+    
+    def get_model_info(self) -> Dict:
+        """Get information about loaded models"""
+        return {
+            'available_models': list(self.models.keys()),
+            'loaded_models': list(self.loaded_models.keys()),
+            'current_model': self.current_model_name,
+            'cache_size': len(self.cache) if self.cache else 0,
+            'cache_limit': self.cache_size
+        }
+    
+    def clear_cache(self):
+        """Clear the embedding cache"""
+        if self.cache:
+            self.cache.clear()
+    
+    def switch_model(self, model_name: str) -> bool:
+        """Switch to a different model"""
+        try:
+            self.get_model(model_name)  # Test loading
+            self.current_model_name = model_name
+            self.current_model = self.loaded_models[model_name]
+            self.clear_cache()  # Clear cache when switching models
+            return True
+        except Exception as e:
+            logger.error(f"Failed to switch to model {model_name}: {e}")
+            return False

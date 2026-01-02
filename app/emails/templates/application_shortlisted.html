@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congratulations! You've Been Shortlisted</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2C3ED6;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-shortlisted {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .job-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .interview-info {
+            background-color: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2C3ED6;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Kempian AI</div>
+            <h1>🎉 Congratulations!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Dear {{ candidate_name }},</p>
+            
+            <p>Great news! We are excited to inform you that you have been <strong>shortlisted</strong> for the <strong>{{ job_title }}</strong> position at <strong>{{ company_name }}</strong>!</p>
+            
+            <div class="status-badge status-shortlisted">
+                Status: Shortlisted for Interview
+            </div>
+            
+            <p>Your application stood out among many qualified candidates, and we would like to move forward with the next stage of our hiring process. This is a significant achievement, and we congratulate you on this milestone!</p>
+            
+            <div class="job-details">
+                <h3>Job Details</h3>
+                <p><strong>Position:</strong> {{ job_title }}</p>
+                <p><strong>Company:</strong> {{ company_name }}</p>
+                <p><strong>Location:</strong> {{ job_location }}</p>
+                <p><strong>Applied Date:</strong> {{ applied_date }}</p>
+            </div>
+            
+            <div class="interview-info">
+                <h3>Next Steps</h3>
+                <p>Our hiring team will be in touch with you shortly to schedule the next phase of interviews. This may include:</p>
+                <ul>
+                    <li>Technical interview</li>
+                    <li>Behavioral interview</li>
+                    <li>Team fit assessment</li>
+                    <li>Final interview with management</li>
+                </ul>
+                <p>Please keep an eye on your email for further communication regarding interview scheduling and preparation materials.</p>
+            </div>
+            
+            <p>We are impressed by your qualifications and look forward to learning more about you during the interview process.</p>
+            
+            <p>Congratulations once again, and we wish you the best of luck!</p>
+            
+            <p>Best regards,<br>
+            The {{ company_name }} Hiring Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>© 2024 Kempian AI. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

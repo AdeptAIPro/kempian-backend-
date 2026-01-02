@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ table_name }} - Database Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+
+        .back-button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #2980b9;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e1e8ed;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .control-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-input {
+            min-width: 200px;
+        }
+
+        .search-column {
+            min-width: 150px;
+        }
+
+        .per-page {
+            width: 80px;
+        }
+
+        .control-button {
+            padding: 8px 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .control-button:hover {
+            background: #2980b9;
+        }
+
+        .control-button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .schema-section {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .schema-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .schema-table th,
+        .schema-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .schema-table th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        .schema-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .data-section {
+            padding: 20px 30px;
+        }
+
+        .data-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .data-table-container {
+            overflow-x: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 800px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .data-table th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .pagination button:disabled {
+            background: #f8f9fa;
+            color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .pagination .current-page {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .info-message {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .cell-content {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .cell-content:hover {
+            white-space: normal;
+            word-break: break-all;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 {{ table_name }}</h1>
+            <a href="/" class="back-button">← Back to Tables</a>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="total-rows">-</div>
+                <div class="stat-label">Total Rows</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="current-page">-</div>
+                <div class="stat-label">Current Page</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="per-page">-</div>
+                <div class="stat-label">Per Page</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="search-term">Search:</label>
+                <input type="text" id="search-term" class="control-input search-input" placeholder="Enter search term">
+            </div>
+            <div class="control-group">
+                <label for="search-column">In Column:</label>
+                <select id="search-column" class="control-input search-column">
+                    <option value="">All Columns</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="per-page-select">Per Page:</label>
+                <select id="per-page-select" class="control-input per-page">
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+            <button class="control-button" onclick="searchData()">Search</button>
+            <button class="control-button" onclick="clearSearch()">Clear</button>
+        </div>
+
+        <div class="schema-section">
+            <h3 class="schema-title">📋 Table Schema</h3>
+            <div id="schema-container">
+                <div class="loading">Loading schema...</div>
+            </div>
+        </div>
+
+        <div class="data-section">
+            <h3 class="data-title">📄 Table Data</h3>
+            <div id="data-container">
+                <div class="loading">Loading data...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tableName = '{{ table_name }}';
+        let currentPage = 1;
+        let perPage = 50;
+        let totalRows = 0;
+        let totalPages = 0;
+        let columns = [];
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchema();
+            loadData();
+        });
+
+        async function loadSchema() {
+            try {
+                const response = await fetch(`/api/table/${tableName}/schema`);
+                const schema = await response.json();
+                
+                if (schema.error) {
+                    throw new Error(schema.error);
+                }
+                
+                displaySchema(schema);
+                populateSearchColumns(schema.columns);
+            } catch (error) {
+                console.error('Error loading schema:', error);
+                document.getElementById('schema-container').innerHTML = 
+                    `<div class="error-message">Error loading schema: ${error.message}</div>`;
+            }
+        }
+
+        function displaySchema(schema) {
+            const container = document.getElementById('schema-container');
+            
+            let table = '<table class="schema-table"><thead><tr>';
+            table += '<th>Column Name</th>';
+            table += '<th>Type</th>';
+            table += '<th>Nullable</th>';
+            table += '<th>Default</th>';
+            table += '<th>Primary Key</th>';
+            table += '<th>Auto Increment</th>';
+            table += '</tr></thead><tbody>';
+
+            schema.columns.forEach(col => {
+                table += '<tr>';
+                table += `<td><strong>${col.name}</strong></td>`;
+                table += `<td>${col.type}</td>`;
+                table += `<td>${col.nullable ? 'Yes' : 'No'}</td>`;
+                table += `<td>${col.default || '-'}</td>`;
+                table += `<td>${col.primary_key ? 'Yes' : 'No'}</td>`;
+                table += `<td>${col.autoincrement ? 'Yes' : 'No'}</td>`;
+                table += '</tr>';
+            });
+
+            table += '</tbody></table>';
+            container.innerHTML = table;
+        }
+
+        function populateSearchColumns(columns) {
+            const select = document.getElementById('search-column');
+            columns.forEach(col => {
+                const option = document.createElement('option');
+                option.value = col.name;
+                option.textContent = col.name;
+                select.appendChild(option);
+            });
+        }
+
+        async function loadData(page = 1, searchTerm = '', searchColumn = '') {
+            try {
+                const params = new URLSearchParams({
+                    page: page,
+                    per_page: perPage,
+                    search: searchTerm,
+                    search_column: searchColumn
+                });
+
+                const response = await fetch(`/api/table/${tableName}?${params}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                currentPage = data.page;
+                totalRows = data.total_rows;
+                totalPages = data.total_pages;
+                
+                displayData(data.data);
+                updatePagination();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('data-container').innerHTML = 
+                    `<div class="error-message">Error loading data: ${error.message}</div>`;
+            }
+        }
+
+        function displayData(data) {
+            const container = document.getElementById('data-container');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<div class="info-message">No data found</div>';
+                return;
+            }
+
+            // Get column names from first row
+            columns = Object.keys(data[0]);
+            
+            let table = '<div class="data-table-container"><table class="data-table"><thead><tr>';
+            columns.forEach(col => {
+                table += `<th>${col}</th>`;
+            });
+            table += '</tr></thead><tbody>';
+
+            data.forEach(row => {
+                table += '<tr>';
+                columns.forEach(col => {
+                    const value = row[col];
+                    const displayValue = value === null ? 'NULL' : 
+                                       (typeof value === 'string' && value.length > 50 ? 
+                                        value.substring(0, 50) + '...' : value);
+                    table += `<td><div class="cell-content" title="${value}">${displayValue}</div></td>`;
+                });
+                table += '</tr>';
+            });
+
+            table += '</tbody></table></div>';
+            container.innerHTML = table;
+        }
+
+        function updatePagination() {
+            const container = document.getElementById('data-container');
+            
+            if (totalPages <= 1) {
+                return;
+            }
+
+            let pagination = '<div class="pagination">';
+            
+            // Previous button
+            pagination += `<button onclick="changePage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>Previous</button>`;
+            
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            
+            if (startPage > 1) {
+                pagination += `<button onclick="changePage(1)">1</button>`;
+                if (startPage > 2) {
+                    pagination += '<span>...</span>';
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const isCurrent = i === currentPage;
+                pagination += `<button onclick="changePage(${i})" ${isCurrent ? 'class="current-page"' : ''}>${i}</button>`;
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pagination += '<span>...</span>';
+                }
+                pagination += `<button onclick="changePage(${totalPages})">${totalPages}</button>`;
+            }
+            
+            // Next button
+            pagination += `<button onclick="changePage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>Next</button>`;
+            
+            pagination += '</div>';
+            container.innerHTML += pagination;
+        }
+
+        function updateStats() {
+            document.getElementById('total-rows').textContent = totalRows.toLocaleString();
+            document.getElementById('current-page').textContent = currentPage;
+            document.getElementById('per-page').textContent = perPage;
+        }
+
+        function changePage(page) {
+            if (page < 1 || page > totalPages) return;
+            
+            const searchTerm = document.getElementById('search-term').value;
+            const searchColumn = document.getElementById('search-column').value;
+            loadData(page, searchTerm, searchColumn);
+        }
+
+        function searchData() {
+            const searchTerm = document.getElementById('search-term').value;
+            const searchColumn = document.getElementById('search-column').value;
+            currentPage = 1;
+            loadData(1, searchTerm, searchColumn);
+        }
+
+        function clearSearch() {
+            document.getElementById('search-term').value = '';
+            document.getElementById('search-column').value = '';
+            currentPage = 1;
+            loadData(1, '', '');
+        }
+
+        // Update per page setting
+        document.getElementById('per-page-select').addEventListener('change', function() {
+            perPage = parseInt(this.value);
+            currentPage = 1;
+            const searchTerm = document.getElementById('search-term').value;
+            const searchColumn = document.getElementById('search-column').value;
+            loadData(1, searchTerm, searchColumn);
+        });
+
+        // Allow Enter key to search
+        document.getElementById('search-term').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchData();
+            }
+        });
+    </script>
+</body>
+</html>
